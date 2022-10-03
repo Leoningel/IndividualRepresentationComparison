@@ -4,43 +4,23 @@ import os
 import shutil
 import src.helper as helper
 from datetime import datetime
+import global_vars as gv
 
-GENETICENGINE_PATH = 'GeneticEngine/'
-
-examples = {
-    # Examples
-    # 'santafe': 'examples/santafe.py',
-    # 'pymax': 'examples/pymax.py',
-    'game_of_life': 'examples/game_of_life.py',
-    'regression': 'examples/regression.py',
-    'classification': 'examples/classification.py',
-    'string_match': 'examples/string_match.py',
-    'vectorialgp': 'examples/vectorialgp_example.py',
-    
-    # Progsys
-    # 'number_io': 'examples/progsys/Number_IO.py',
-    # 'smallest': 'examples/progsys/Smallest.py',
-    # 'median': 'examples/progsys/Median.py',
-    # 'sum_of_squares': 'examples/progsys/Sum_of_Squares.py',
-    # 'vector_average': 'examples/progsys/Vector_Average.py',
-}
-
-results_path = 'results'
 
 modes = [ "generations", "time" ]
-example_names = list(examples.keys())
+example_names = list(gv.examples.keys())
 representations = [ "treebased_representation", "ge", "dsge" ]
 
 def clean_results(archive_name):
-    shutil.move(results_path, f"./archive/{archive_name}")
-    os.mkdir(results_path)
+    shutil.move(gv.RESULTS_PATH, f"./archive/{archive_name}")
+    os.mkdir(gv.RESULTS_PATH)
     for mode in modes:
-        helper.create_folder(f'{results_path}/{mode}')
+        helper.create_folder(f'{gv.RESULTS_PATH}/{mode}')
         for example_name in example_names:
-            helper.create_folder(f'{results_path}/{mode}/{example_name}')
+            helper.create_folder(f'{gv.RESULTS_PATH}/{mode}/{example_name}')
             for representation in representations:
-                helper.create_folder(f'{results_path}/{mode}/{example_name}/{representation}')
-                with open(f"{results_path}/{mode}/{example_name}/{representation}/main.csv", "w", newline="") as outfile:
+                helper.create_folder(f'{gv.RESULTS_PATH}/{mode}/{example_name}/{representation}')
+                with open(f"{gv.RESULTS_PATH}/{mode}/{example_name}/{representation}/main.csv", "w", newline="") as outfile:
                     writer = csv.writer(outfile)
                     writer.writerow([ "mode", "example", "representation", "seed", "train_score", "time", "best_ind" ])
 
