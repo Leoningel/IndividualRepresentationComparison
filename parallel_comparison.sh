@@ -10,4 +10,4 @@
 #SBATCH --array=0-179                   # iterate values between 0 and 59, inclusive
 
 bash setup.sh
-python src/single_example.py -s $(expr $SLURM_ARRAY_TASK_ID % 30) -t $(expr $SLURM_ARRAY_TASK_ID / 90) -r $(expr $(expr $SLURM_ARRAY_TASK_ID / 30) % 3) $*
+bash run_examples.sh -s $(expr $SLURM_ARRAY_TASK_ID % 30) -t $(expr $SLURM_ARRAY_TASK_ID / 90) -r $(expr $(expr $SLURM_ARRAY_TASK_ID / 30) % 3) $*
