@@ -10,14 +10,14 @@ examples = {
     'regression': 'examples/regression.py',
     'classification': 'examples/classification.py',
     'string_match': 'examples/string_match.py',
-    'vectorialgp': 'examples/vectorialgp_example.py',
+    'vectorialgp_example': 'examples/vectorialgp_example.py',
     
     # Progsys
-    'number_io': 'examples/progsys/Number_IO.py',
-    'smallest': 'examples/progsys/Smallest.py',
-    'median': 'examples/progsys/Median.py',
-    'sum_of_squares': 'examples/progsys/Sum_of_Squares.py',
-    'vector_average': 'examples/progsys/Vector_Average.py',
+    'Number_IO': 'examples/progsys/Number_IO.py',
+    'Smallest': 'examples/progsys/Smallest.py',
+    'Median': 'examples/progsys/Median.py',
+    'Sum_of_Squares': 'examples/progsys/Sum_of_Squares.py',
+    'Vector_Average': 'examples/progsys/Vector_Average.py',
 }
 
 RESULTS_PATH = 'results'
