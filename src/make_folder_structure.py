@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 import csv
 import os
 import shutil
-import src.helper as helper
+import helper
 from datetime import datetime
 import global_vars as gv
 
