@@ -7,8 +7,8 @@ python GeneticEngine/examples/string_match.py $*
 python GeneticEngine/examples/vectorialgp_example.py $*
 python GeneticEngine/examples/classification.py $*
 
-python GeneticEngine/examples/Number_IO.py $*
-python GeneticEngine/examples/Smallest.py $*
-python GeneticEngine/examples/Median.py $*
-python GeneticEngine/examples/Sum_of_Squares.py $*
-python GeneticEngine/examples/Vector_Average.py $*
+python GeneticEngine/examples/progsys/Number_IO.py $*
+python GeneticEngine/examples/progsys/Smallest.py $*
+python GeneticEngine/examples/progsys/Median.py $*
+python GeneticEngine/examples/progsys/Sum_of_Squares.py $*
+python GeneticEngine/examples/progsys/Vector_Average.py $*
