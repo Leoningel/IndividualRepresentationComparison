@@ -10,4 +10,5 @@
 #SBATCH --array=0-89                   # iterate values between 0 and 59, inclusive
 
 bash setup.sh
+ulimit -m 1048576 
 bash run_examples.sh -r $(expr $SLURM_ARRAY_TASK_ID % 3) -s $(expr $(expr $SLURM_ARRAY_TASK_ID / 3) % 30) $*
