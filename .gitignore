@@ -8,6 +8,7 @@ results/
 __pycache__/
 *.py[cod]
 *$py.class
+Gengy_implementation/examples/data/cifar-10-python.tar.gz
 
 # C extensions
 *.so
