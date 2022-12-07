@@ -7,7 +7,7 @@
 #SBATCH --time=48:00:00                 # Time limit hrs:min:sec
 #SBATCH --output=logs/parallel_%j.log   # Standard output and error log
 
-#SBATCH --array=0-91                   # iterate values between 0 and 59, inclusive
+#SBATCH --array=0-89                   # iterate values between 0 and 59, inclusive
 
 # sbatch parallel_comparison.sh treebased
 cd ..
