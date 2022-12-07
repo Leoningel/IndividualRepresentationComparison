@@ -1,1 +1,8 @@
+geneticengine==0.0.46
+pandas
+numpy
 seaborn
+sklearn
+keras
+tensorflow
+pickle
