@@ -10,6 +10,7 @@ from geneticengine.metahandlers.ints import IntList, IntRange
 from geneticengine.metahandlers.lists import ListSizeBetween
 from geneticengine.metahandlers.vars import VarRange
 
+from keras.callbacks import EarlyStopping
 from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Flatten, Input
 from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
@@ -203,7 +204,7 @@ def evaluate(elem: Start, dataset):
 num_classes = len(set(y_train.transpose()[0]))
 y_train = np_utils.to_categorical(y_train, num_classes)
 y_test = np_utils.to_categorical(y_test, num_classes)
-data_train, data_test = (X_train, y_train), (X_test, y_test)
+data_train, data_test = (X_train[:gv.TRAIN_SIZE], y_train[:gv.TRAIN_SIZE]), (X_test[:gv.TEST_SIZE], y_test[:gv.TEST_SIZE])
 
 def fitness_function(data):
     def ff(ind: Start):
@@ -215,11 +216,14 @@ def fitness_function(data):
                 optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
                 loss='categorical_crossentropy',
                 )
+            es = EarlyStopping(monitor='loss', mode='min', verbose=1, patience=4, min_delta=0.1)
             model.fit(
                 data[0], 
                 data[1],
                 batch_size=gv.BATCH,
                 epochs=gv.EPOCHS,
+                verbose=0,
+                callbacks=[es],
             )
 
         return 1
@@ -229,8 +233,8 @@ if __name__ == "__main__":
     representations = [ 'ge', 'dsge', 'treebased' ]
     
     parser = ArgumentParser()
-    parser.add_argument("-s", "--seed", dest="seed", nargs='+', type=int)
-    parser.add_argument("-r", "--representation", dest="representation", nargs='+', type=int)
+    parser.add_argument("-s", "--seed", dest="seed", nargs='+', type=int, default=0)
+    parser.add_argument("-r", "--representation", dest="representation", nargs='+', type=int, default=0)
     args = parser.parse_args()
 
     run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="cnn", seed=args.seed, representation=representations[args.representation])
