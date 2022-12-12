@@ -233,8 +233,8 @@ if __name__ == "__main__":
     representations = [ 'ge', 'dsge', 'treebased' ]
     
     parser = ArgumentParser()
-    parser.add_argument("-s", "--seed", dest="seed", nargs='+', type=int, default=0)
-    parser.add_argument("-r", "--representation", dest="representation", nargs='+', type=int, default=0)
+    parser.add_argument("-s", "--seed", dest="seed", type=int, default=0)
+    parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
     run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="cnn", seed=args.seed, representation=representations[args.representation])
