@@ -133,7 +133,7 @@ grammar = extract_grammar(
                 )
 
 def evaluate(elem: Start, dataset):
-    def eval(elem: Start | Layer | LType):
+    def eval(elem):
         if isinstance(elem, Parameter):
             return elem.evaluate()
         if isinstance(elem, LTypeLayer):
