@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=leon_ingelse_thesis  # Job name
+#SBATCH --job-name=lingelse_rep_comp    # Job name
 #SBATCH --nodes=1                       # Run all processes on a single node	
 #SBATCH --ntasks=1                      # Run a single task		
 #SBATCH --cpus-per-task=1               # Number of CPU cores per task
