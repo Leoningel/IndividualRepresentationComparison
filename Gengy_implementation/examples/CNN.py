@@ -208,7 +208,7 @@ data_train, data_test = (X_train[:gv.TRAIN_SIZE], y_train[:gv.TRAIN_SIZE]), (X_t
 
 def fitness_function(data):
     def ff(ind: Start):
-        model = evaluate(ind, data)
+        model = evaluate(ind, data_train)
         if not model:
             return 999999999999999999
         else:
@@ -218,8 +218,8 @@ def fitness_function(data):
                 )
             es = EarlyStopping(monitor='loss', mode='min', verbose=1, patience=4, min_delta=0.1)
             model.fit(
-                data[0], 
-                data[1],
+                data_train[0], 
+                data_train[1],
                 batch_size=gv.BATCH,
                 epochs=gv.EPOCHS,
                 verbose=0,
@@ -229,6 +229,17 @@ def fitness_function(data):
         return model.evaluate(data[0], data[1])
     return ff
 
+vars = {
+    'MINIMIZE': True,
+    'NUMBER_OF_ITERATIONS': 25,
+    'MIN_INIT_DEPTH': None,
+    'MIN_DEPTH': None,
+    'MAX_INIT_DEPTH': 4,
+    'MAX_DEPTH': 6,
+    'POPULATION_SIZE': 20,
+    'ELITSM': 5,
+}
+
 if __name__ == "__main__":
     representations = [ 'ge', 'dsge', 'treebased' ]
     
@@ -237,7 +248,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="cnn", seed=args.seed, representation=representations[args.representation])
+    run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="cnn", seed=args.seed, vars=vars, representation=representations[args.representation])
 
 
 

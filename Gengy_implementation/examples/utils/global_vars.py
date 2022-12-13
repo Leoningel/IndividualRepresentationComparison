@@ -1,13 +1,6 @@
-POPULATION_SIZE = 20
-NUMBER_OF_ITERATIONS = 25
-ELITISM = POPULATION_SIZE/4 #number of individuals to copy to the next generation
 TOURNAMENT = 5
 PROB_CROSSOVER = 1
 PROB_MUTATION = 1 # (lambda mapped : 1.0 / mapped)
-MIN_INIT_DEPTH=None
-MIN_DEPTH=None
-MAX_INIT_DEPTH=4
-MAX_DEPTH=8
 RESULTS_FOLDER = "results"
 PENALIZE_PERC = 0.2
 

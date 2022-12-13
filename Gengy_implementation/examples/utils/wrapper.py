@@ -22,6 +22,7 @@ def run_experiments(
         ff_test,
         folder_name,
         seed,
+        vars: dict,
         representation="treebased",
     ):
     novelty = 0
@@ -45,7 +46,7 @@ def run_experiments(
         print(grammar)
 
         so_problem=SingleObjectiveProblem(
-                    minimize=True,
+                    minimize=vars['MINIMIZE'],
                     fitness_function=ff,
                     target_fitness=0,
                 )
@@ -57,14 +58,14 @@ def run_experiments(
             probability_crossover=gv.PROB_CROSSOVER,
             probability_mutation=gv.PROB_MUTATION,
             cross_over_return_one_individual=True,
-            number_of_generations=gv.NUMBER_OF_ITERATIONS,
-            min_init_depth=gv.MIN_INIT_DEPTH,
-            min_depth=gv.MIN_DEPTH,
-            max_init_depth=gv.MAX_INIT_DEPTH,
-            max_depth=gv.MAX_DEPTH,
-            population_size=gv.POPULATION_SIZE,
+            number_of_generations=vars['NUMBER_OF_ITERATIONS'],
+            min_init_depth=vars['MIN_INIT_DEPTH'],
+            min_depth=vars['MIN_DEPTH'],
+            max_init_depth=vars['MAX_INIT_DEPTH'],
+            max_depth=vars['MAX_DEPTH'],
+            population_size=vars['POPULATION_SIZE'],
             selection_method=("tournament",gv.TOURNAMENT),
-            n_elites=gv.ELITISM,
+            n_elites=vars['ELITSM'],
             n_novelties=novelty,
             save_to_csv=CSVCallback(
                 filename=f"{gv.RESULTS_FOLDER}/{folder_name}/{representation}/{seed}.csv",
