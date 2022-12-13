@@ -226,7 +226,7 @@ def fitness_function(data):
                 callbacks=[es],
             )
 
-        return 1
+        return model.evaluate(data[0], data[1])
     return ff
 
 if __name__ == "__main__":
