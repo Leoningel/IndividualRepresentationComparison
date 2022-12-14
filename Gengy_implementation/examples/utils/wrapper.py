@@ -36,7 +36,7 @@ def run_experiments(
         repr.codon_prob = 0.05
     else:
         repr = treebased_representation
-        novelty = int(gv.POPULATION_SIZE * 0.05)
+        novelty = int(vars['POPULATION_SIZE'] * 0.05)
     repr.method = Random_Production()
 
     def evolve(
