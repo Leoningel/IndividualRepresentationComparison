@@ -9,7 +9,6 @@
 
 #SBATCH --array=0-89%5                  # iterate values between 0 and 59, inclusive
 
-# sbatch parallel_comparison.sh treebased
 cd ..
 pip install -r requirements.txt
 cd Gengy_implementation
