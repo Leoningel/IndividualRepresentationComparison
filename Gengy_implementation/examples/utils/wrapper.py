@@ -48,7 +48,7 @@ def run_experiments(
         so_problem=SingleObjectiveProblem(
                     minimize=vars['MINIMIZE'],
                     fitness_function=ff,
-                    target_fitness=0,
+                    target_fitness=vars['TARGET_FITNESS'],
                 )
 
         alg = GP(

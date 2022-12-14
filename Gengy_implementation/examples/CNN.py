@@ -235,9 +235,10 @@ vars = {
     'MIN_INIT_DEPTH': None,
     'MIN_DEPTH': None,
     'MAX_INIT_DEPTH': 4,
-    'MAX_DEPTH': 6,
+    'MAX_DEPTH': 8,
     'POPULATION_SIZE': 20,
     'ELITSM': 5,
+    'TARGET_FITNESS': 0,
 }
 
 if __name__ == "__main__":
