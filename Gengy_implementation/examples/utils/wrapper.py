@@ -76,7 +76,7 @@ def run_experiments(
             timer_stop_criteria=mode,
         )
         (b, bf, bp) = alg.evolve(verbose=1)
-        return b, bf, bp, b.count_prods(representation.genotype_to_phenotype, grammar)
+        return b, bf, bp, b.count_prods(repr.genotype_to_phenotype, grammar)
 
     individual, fitness, phenotype, prods = evolve(seed, False)
     test_fitness = ff_test(phenotype)
