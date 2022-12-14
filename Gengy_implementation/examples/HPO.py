@@ -120,7 +120,7 @@ def fitness_function(data):
     def ff(ind: Start):
         score = evaluate(ind, data)
         if not score:
-            return 999999999999999999
+            return -999999999999999999
         else:
             return score
     return ff
