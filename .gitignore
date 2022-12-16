@@ -3,12 +3,12 @@ PonyGE2
 archive
 *.pdf
 *.csv
+!Gengy_implementation/examples/data/*
 results/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-!Gengy_implementation/examples/data/ChickWeight.csv
 
 # C extensions
 *.so
