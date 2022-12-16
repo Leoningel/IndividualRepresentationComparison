@@ -3,7 +3,8 @@ PonyGE2
 archive
 *.pdf
 *.csv
-!Gengy_implementation/examples/data/*
+!src/examples/data/*
+!src/examples/data/GameOfLife/*
 results/
 # Byte-compiled / optimized / DLL files
 __pycache__/
