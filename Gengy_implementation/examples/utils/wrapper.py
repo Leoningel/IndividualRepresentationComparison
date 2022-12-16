@@ -79,7 +79,9 @@ def run_experiments(
         return b, bf, bp, b.count_prods(repr.genotype_to_phenotype, grammar)
 
     individual, fitness, phenotype, prods = evolve(seed, False)
-    test_fitness = ff_test(phenotype)
+    test_fitness = None
+    if ff_test:
+        test_fitness = ff_test(phenotype)
     fitness = ff(phenotype)
     print(phenotype)
     print(f"With fitness: {fitness}")
