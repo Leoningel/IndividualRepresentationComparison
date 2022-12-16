@@ -4,7 +4,7 @@ import csv
 import pandas as pd
 import numpy as np
 
-import utils.global_vars as gv
+import examples.utils.global_vars as gv
 
 from geneticengine.algorithms.callbacks.csv_callback import CSVCallback
 from geneticengine.algorithms.gp.gp import GP

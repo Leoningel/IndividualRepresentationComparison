@@ -30,8 +30,10 @@ from geneticengine.grammars.coding.logical_ops import Not
 from geneticengine.grammars.coding.logical_ops import Or
 from geneticengine.metahandlers.ints import IntRange
 
-from utils.wrapper import run_experiments
+from examples.utils.wrapper import run_experiments
 
+
+# This example is a spatial problem. Originally, we planned to implement the problem given in this paper: https://www.sciencedirect.com/science/article/pii/S030438000100309X?casa_token=NV39DBUNnswAAAAA:oRJp2wH7cwQp40tb4Mke90wZKIHjTtKBMF7zkSfyQ8N4_ZT_dDIjzP_ClCJoGid1fvSdZTvZIUU. We couldn't find the data nor the code, and authors weren't responsive. We also tried contacting the original publisher of the data. We implemented game of life as a subsitute.
 
 DATASET_NAME = "GameOfLife"
 DATA_FILE_TRAIN = f"examples/data/{DATASET_NAME}/Train.csv"
@@ -112,4 +114,4 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function, ff_test=fitness_function_test, folder_name="game_oL", seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(grammar, ff=fitness_function, ff_test=fitness_function_test, folder_name="game_of_life", seed=args.seed, params=params, representation=representations[args.representation])

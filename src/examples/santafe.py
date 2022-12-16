@@ -24,8 +24,10 @@ from geneticengine.core.representations.grammatical_evolution.structured_ge impo
 from geneticengine.core.representations.tree.treebased import treebased_representation
 from geneticengine.metahandlers.lists import ListSizeBetween
 
-from utils.wrapper import run_experiments
+from examples.utils.wrapper import run_experiments
 
+
+# This example is based on the grammar given in https://link.springer.com/chapter/10.1007/978-3-319-55696-3_20
 
 map = """.###............................
 ...#............................

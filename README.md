@@ -3,17 +3,15 @@
 
 1 - Run the setup file: ``./setup.sh``.
 
-## Steps to run the comparison with PonyGE2
+## Steps to run an example
 
 1 - Run ``./update.sh`` to ensure you are running the latest version in master for each framework.
 
-2 - Execute the run evaluation file: ``./run_ponyge_comparison.sh --mode=timer``. 
+2 - Go into the src folder: ``cd src``
 
-You can specify a single example to be evaluated with the command ``./run_ponyge_comparison.sh example``.
+3 - Make sure the folder structure of the example you want to run is in place. You can find the folder name in the wrapper function ``run_experiment`` of your example. If it is not in place (it must have a folder in the results folder with a folder for all three representations, and a main.csv in each of these subfolders with the relevant column names), you can run the initialize.py programme: ``python initialize.py <folder_name>``.
 
-You **are required** to choose what mode you want to evaluate: either by generations or timer. by using the following command:
-``./run_ponyge_comparison.sh --mode=generations example`` or ``./run_ponyge_comparison.sh --mode=timer example`` 
+4 - Run the programme once: ``python run_example.py -e <example_name> -s <seed (int, optional)> -r <representation (int, optional)>``, or run it for each representation with 30 seeds: ``parallel_comparison.sh -e <example_name>``.
 
-3 - Execute the plot generator file by running: ``./ponyge_plot_generator.sh``. 
 
-You can specify a single example to be evaluated with the command ``./ponyge_plot_generator.sh example``.
+

@@ -18,8 +18,8 @@ from geneticengine.grammars.dynamic_grammar import edit_distance
 
 #example not currently working because genetic engine 0.0.46 does not contain the implementation of dynamic grammars
 
-from utils.wrapper import run_experiments
-import utils.global_vars as gv
+from examples.utils.wrapper import run_experiments
+import examples.utils.global_vars as gv
 
 grammar_seed= 321;
 (list, starting_node) = create_grammar_nodes(

@@ -40,9 +40,12 @@ from geneticengine.metahandlers.ints import IntRange
 from geneticengine.metahandlers.vars import VarRange
 from geneticengine.metrics import mse
 
-from utils.wrapper import run_experiments
+from examples.utils.wrapper import run_experiments
 import warnings
 warnings.filterwarnings("ignore")
+
+
+# This example is based on the grammar given in https://link.springer.com/chapter/10.1007/978-3-319-55696-3_20
 
 DATA_FILE = f"examples/data/housing.csv"
 
@@ -51,6 +54,8 @@ y = bunch["MEDV"]
 X = bunch.drop(["MEDV"], axis=1)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+data_train = (X_train, y_train)
+data_test = (X_test, y_test)
 
 feature_names = list(X_train.columns.values)
 feature_indices = {}
@@ -144,4 +149,4 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function((X_train, y_train)), ff_test=fitness_function((X_test, y_test)), folder_name="boston_housing", seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="boston_housing", seed=args.seed, params=params, representation=representations[args.representation])

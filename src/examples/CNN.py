@@ -17,9 +17,8 @@ from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
 from keras.utils import np_utils
 import tensorflow as tf
 
-from utils.wrapper import run_experiments
-import utils.global_vars as gv
-
+from examples.utils.wrapper import run_experiments
+import examples.utils.global_vars as gv
 
 
 # This example follows the grammar from https://github.com/rhrlima/cbioge/blob/1d1ffc3b3d6c79d08524e4ab8ca5526815b0d38b/cbioge/assets/grammars/cnn_example2.json

@@ -9,8 +9,8 @@ from geneticengine.core.grammar import extract_grammar
 from geneticengine.metahandlers.floats import FloatRange, FloatList
 from geneticengine.metahandlers.ints import IntList, IntRange
 
-from utils.wrapper import run_experiments
-import utils.global_vars as gv
+from examples.utils.wrapper import run_experiments
+import examples.utils.global_vars as gv
 def warn(*args, **kwargs):
     pass
 import warnings
@@ -20,6 +20,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 
+
+# This example is based on the grammar given in https://www.jstatsoft.org/article/view/v071i01
 
 @abstract
 class Start():
@@ -83,6 +85,7 @@ X = data[['Time', 'Chick', 'Diet']]
 y = data['weight']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
 data_train = (X_train, y_train)
+data_test = (X_test, y_test)
 
 def evaluate(elem: Solution, data_test):
     features = list()
@@ -143,7 +146,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function((X_train, y_train)), ff_test=fitness_function((X_test, y_test)), folder_name="hpo", seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="hpo", seed=args.seed, params=params, representation=representations[args.representation])
 
 
 
