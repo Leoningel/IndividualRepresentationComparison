@@ -229,7 +229,7 @@ def fitness_function(data):
         return model.evaluate(data[0], data[1])
     return ff
 
-vars = {
+params = {
     'MINIMIZE': True,
     'NUMBER_OF_ITERATIONS': 25,
     'MIN_INIT_DEPTH': None,
@@ -249,7 +249,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="cnn", seed=args.seed, vars=vars, representation=representations[args.representation])
+    run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="cnn", seed=args.seed, params=params, representation=representations[args.representation])
 
 
 

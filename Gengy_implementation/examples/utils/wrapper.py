@@ -22,7 +22,7 @@ def run_experiments(
         ff_test,
         folder_name,
         seed,
-        vars: dict,
+        params: dict,
         representation="treebased",
     ):
     novelty = 0
@@ -36,7 +36,7 @@ def run_experiments(
         repr.codon_prob = 0.05
     else:
         repr = treebased_representation
-        novelty = int(vars['POPULATION_SIZE'] * 0.05)
+        novelty = int(params['POPULATION_SIZE'] * 0.05)
     repr.method = Random_Production()
 
     def evolve(
@@ -46,9 +46,9 @@ def run_experiments(
         print(grammar)
 
         so_problem=SingleObjectiveProblem(
-                    minimize=vars['MINIMIZE'],
+                    minimize=params['MINIMIZE'],
                     fitness_function=ff,
-                    target_fitness=vars['TARGET_FITNESS'],
+                    target_fitness=params['TARGET_FITNESS'],
                 )
 
         alg = GP(
@@ -58,14 +58,14 @@ def run_experiments(
             probability_crossover=gv.PROB_CROSSOVER,
             probability_mutation=gv.PROB_MUTATION,
             cross_over_return_one_individual=True,
-            number_of_generations=vars['NUMBER_OF_ITERATIONS'],
-            min_init_depth=vars['MIN_INIT_DEPTH'],
-            min_depth=vars['MIN_DEPTH'],
-            max_init_depth=vars['MAX_INIT_DEPTH'],
-            max_depth=vars['MAX_DEPTH'],
-            population_size=vars['POPULATION_SIZE'],
+            number_of_generations=params['NUMBER_OF_ITERATIONS'],
+            min_init_depth=params['MIN_INIT_DEPTH'],
+            min_depth=params['MIN_DEPTH'],
+            max_init_depth=params['MAX_INIT_DEPTH'],
+            max_depth=params['MAX_DEPTH'],
+            population_size=params['POPULATION_SIZE'],
             selection_method=("tournament",gv.TOURNAMENT),
-            n_elites=vars['ELITSM'],
+            n_elites=params['ELITSM'],
             n_novelties=novelty,
             save_to_csv=CSVCallback(
                 filename=f"{gv.RESULTS_FOLDER}/{folder_name}/{representation}/{seed}.csv",

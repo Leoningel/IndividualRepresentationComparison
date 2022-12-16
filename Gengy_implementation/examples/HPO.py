@@ -8,8 +8,6 @@ from geneticengine.core.decorators import abstract
 from geneticengine.core.grammar import extract_grammar
 from geneticengine.metahandlers.floats import FloatRange, FloatList
 from geneticengine.metahandlers.ints import IntList, IntRange
-from geneticengine.metahandlers.lists import ListSizeBetween
-from geneticengine.metahandlers.vars import VarRange
 
 from utils.wrapper import run_experiments
 import utils.global_vars as gv
@@ -125,7 +123,7 @@ def fitness_function(data):
             return score
     return ff
 
-vars = {
+params = {
     'MINIMIZE': False,
     'NUMBER_OF_ITERATIONS': 25,
     'MIN_INIT_DEPTH': None,
@@ -145,7 +143,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function((X_train, y_train)), ff_test=fitness_function((X_test, y_test)), folder_name="hpo", seed=args.seed, vars=vars, representation=representations[args.representation])
+    run_experiments(grammar, ff=fitness_function((X_train, y_train)), ff_test=fitness_function((X_test, y_test)), folder_name="hpo", seed=args.seed, params=params, representation=representations[args.representation])
 
 
 
