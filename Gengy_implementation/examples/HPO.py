@@ -127,13 +127,13 @@ def fitness_function(data):
 
 vars = {
     'MINIMIZE': False,
-    'NUMBER_OF_ITERATIONS': 108,
+    'NUMBER_OF_ITERATIONS': 25,
     'MIN_INIT_DEPTH': None,
     'MIN_DEPTH': None,
     'MAX_INIT_DEPTH': None,
-    'MAX_DEPTH': 6,
-    'POPULATION_SIZE': 30,
-    'ELITSM': 5,
+    'MAX_DEPTH': 10,
+    'POPULATION_SIZE': 20,
+    'ELITSM': 1,
     'TARGET_FITNESS': 1,
 }
 
