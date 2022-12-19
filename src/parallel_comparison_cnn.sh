@@ -12,4 +12,4 @@
 cd ..
 pip install -r requirements.txt
 cd src
-python run_example.py -s $(expr $SLURM_ARRAY_TASK_ID % 30) -r $(expr $SLURM_ARRAY_TASK_ID / 30) -e CNN
+python run_example.py -s $(expr $SLURM_ARRAY_TASK_ID % 30) -r $(expr $SLURM_ARRAY_TASK_ID / 30) -e cnn
