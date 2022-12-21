@@ -34,7 +34,7 @@ class Layer(ABC):
 
 @dataclass
 class CNN(Start):
-    layers: Annotated[list[Layer], ListSizeBetween(1,5)]
+    layers: Annotated[list[Layer], ListSizeBetween(1,3)]
 
 @abstract
 class LType(Layer):
