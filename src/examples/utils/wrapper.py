@@ -70,6 +70,7 @@ def run_experiments(
             save_to_csv=CSVCallback(
                 filename=f"{gv.RESULTS_FOLDER}/{folder_name}/{representation}/{seed}.csv",
                 test_data=ff_test,
+                save_genotype_as_string=True,
                 save_productions=True,
                 ),
             seed=seed,
