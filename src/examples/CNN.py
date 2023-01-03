@@ -199,7 +199,9 @@ def evaluate(elem: Start, dataset):
         # raise Exception('Invalid model')
     return model
 
-(X_train, y_train), (X_test, y_test) = tf.keras.datasets.cifar10.load_data()
+
+from examples.utils.cifar10http import load_data_alt
+(X_train, y_train), (X_test, y_test) = load_data_alt() #tf.keras.datasets.cifar10.load_data()
 num_classes = len(set(y_train.transpose()[0]))
 y_train = np_utils.to_categorical(y_train, num_classes)
 y_test = np_utils.to_categorical(y_test, num_classes)
