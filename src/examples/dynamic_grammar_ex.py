@@ -9,7 +9,6 @@ from geneticengine.core.representations.tree.treebased import treebased_represen
 from geneticengine.grammars.dynamic_grammar import edit_distance
 
 from examples.utils.wrapper import run_experiments
-import examples.utils.global_vars as gv
 
 grammar_seed= 321;
 (list, starting_node) = create_grammar_nodes(
@@ -37,7 +36,6 @@ target_individual = create_target_individual(grammar_seed, grammar)
 
 def fitness_function(n):
     return edit_distance(str(n), str(target_individual))
-
 
 params = {
     'MINIMIZE': True,
