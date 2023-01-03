@@ -1,4 +1,4 @@
-geneticengine==0.0.46
+geneticengine==0.0.49
 pandas
 numpy
 seaborn

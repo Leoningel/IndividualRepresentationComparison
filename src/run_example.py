@@ -34,6 +34,10 @@ if __name__ == "__main__":
         from examples.boston_housing import fitness_function, grammar, data_train, data_test, params
         ff_train = fitness_function(data_train)
         ff_test = fitness_function(data_test)
+    elif example == 'dynamic_grammar':
+        from examples.dynamic_grammar_ex import fitness_function, grammar, params
+        ff_train = fitness_function
+        ff_test = None
     else:
         raise Exception(f"The example {example} is not included. Included examples: cnn, hpo, game_of_life, santafe, boston_housing")
 

@@ -1,29 +1,19 @@
-from abc import ABC
-from argparse import ArgumentParser
-from dataclasses import dataclass
-from typing import Annotated
 
-from geneticengine.core.decorators import abstract
+from argparse import ArgumentParser
+
 from geneticengine.core.grammar import extract_grammar
-from geneticengine.metahandlers.floats import FloatRange
-from geneticengine.metahandlers.ints import IntList, IntRange
-from geneticengine.metahandlers.lists import ListSizeBetween
-from geneticengine.metahandlers.vars import VarRange
 from geneticengine.core.random.sources import RandomSource
 
 from geneticengine.grammars.dynamic_grammar import create_grammar_nodes
-from geneticengine.core.representations.tree.treebased import TreeBasedRepresentation
+from geneticengine.core.representations.tree.treebased import treebased_representation
 from geneticengine.grammars.dynamic_grammar import edit_distance
-
-
-#example not currently working because genetic engine 0.0.46 does not contain the implementation of dynamic grammars
 
 from examples.utils.wrapper import run_experiments
 import examples.utils.global_vars as gv
 
 grammar_seed= 321;
 (list, starting_node) = create_grammar_nodes(
-    grammar_seed=grammar_seed,
+    seed=grammar_seed,
     n_class_abc = 6,
     n_class_0_children = 4,
     n_class_2_children = 12,
@@ -33,13 +23,13 @@ grammar_seed= 321;
 grammar = extract_grammar(list, starting_node)
 
 
-def create_target_individual(grammar_seed, g):
+def create_target_individual(grammar_seed, grammar):
 
     r = RandomSource(grammar_seed)
-    representation = TreeBasedRepresentation
-    target_individual = representation.create_individual(r, g, depth=10)
+    representation = treebased_representation
+    target_individual = representation.create_individual(r=r, g=grammar, depth=10)
     individual_phenotype = representation.genotype_to_phenotype(
-        g, target_individual)
+        grammar, target_individual)
     return individual_phenotype
 
 
