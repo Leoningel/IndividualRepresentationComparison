@@ -13,6 +13,16 @@ if __name__ == "__main__":
     folder_name = sys.argv[1]
 
     try:
+        if sys.argv[2] == '-s':
+            folder_name = f"synthetic/{folder_name}"
+        try:
+            os.mkdir(f"{RESULTS_FOLDER}/synthetic")
+        except:
+            pass
+    except:
+        pass
+
+    try:
         os.mkdir(f"{RESULTS_FOLDER}")
     except:
         pass
