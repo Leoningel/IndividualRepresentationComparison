@@ -17,14 +17,14 @@ complex = {
     'n_class_abc': 2,
     'n_class_0_ch': 5,
     'n_class_2_ch': 3,
-    'max_var_per_class': 4,
+    'max_var_per_class': 3,
 }
 
 very_complex = { 
     'n_class_abc': 4,
     'n_class_0_ch': 7,
     'n_class_2_ch': 5,
-    'max_var_per_class': 6,
+    'max_var_per_class': 5,
 }
 
 if __name__ == "__main__":
