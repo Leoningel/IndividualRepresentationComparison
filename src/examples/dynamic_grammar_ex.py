@@ -42,7 +42,6 @@ def grammar_and_ff_def(g_seed=321, n_class_abc=6, n_class_0_ch=4, n_class_2_ch=1
         else:
             ind = Individual(target_individual)
             ti_prods = ind.count_prods(treebased_representation.genotype_to_phenotype, grammar)
-            print(ti_prods)
             if level_of_hardness == 'medium':
                 def ff(n):
                     n_ind = Individual(n)
@@ -50,10 +49,6 @@ def grammar_and_ff_def(g_seed=321, n_class_abc=6, n_class_0_ch=4, n_class_2_ch=1
                     prod_differences = 0
                     for prod in prods.keys():
                         prod_differences += abs(ti_prods[prod] - prods[prod])
-                    if prod_differences == 0:
-                        ti = target_individual
-                        import IPython as ip
-                        ip.embed()
                     return prod_differences
             elif level_of_hardness == 'easy':
                 random_key = random.choice([key for key in ti_prods.keys()])
