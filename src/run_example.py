@@ -37,4 +37,4 @@ if __name__ == "__main__":
     else:
         raise Exception(f"The example {example} is not included. Included examples: cnn, hpo, game_of_life, santafe, boston_housing")
 
-    run_experiments(grammar, ff=ff_train, ff_test=ff_test, folder_name=example, seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(grammar, ff=ff_train, ff_test=ff_test, benchmark_name=example, seed=args.seed, params=params, representation=representations[args.representation])
