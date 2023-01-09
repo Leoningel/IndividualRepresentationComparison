@@ -2,7 +2,7 @@ geneticengine==0.0.50
 pandas
 numpy
 seaborn
-sklearn
+scikit-learn
 keras
 tensorflow
 configs
