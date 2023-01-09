@@ -2,6 +2,7 @@ from abc import ABC
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from typing import Annotated
+import functools
 
 from geneticengine.core.decorators import abstract
 from geneticengine.core.grammar import extract_grammar
@@ -32,7 +33,7 @@ class Start():
 class Layer(ABC):
     pass
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class CNN(Start):
     layers: Annotated[list[Layer], ListSizeBetween(1,3)]
 
@@ -40,7 +41,7 @@ class CNN(Start):
 class LType(Layer):
     pass
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class LTypeLayer(Layer):
     l_type: LType
     layer: Layer 
@@ -50,55 +51,55 @@ class Parameter():
     def evaluate(self):
         raise ValueError("No evaluate method implemented")
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class PoolType(Parameter):
     pooltype: Annotated[str, VarRange([ "maxpool", "avgpool" ])]
     def evaluate(self):
         return self.pooltype
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Filters(Parameter):
     filters: Annotated[int, IntList([16, 32, 64, 128, 256, 512])]
     def evaluate(self):
         return self.filters
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Units(Parameter):
     units: Annotated[int, IntList([32, 64, 128, 256, 512, 1024])]
     def evaluate(self):
         return self.units
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Ksize(Parameter):
     ksize: Annotated[int, IntRange(1, 5)]
     def evaluate(self):
         return self.ksize
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Strides(Parameter):
     strides: Annotated[int, IntRange(1, 2)]
     def evaluate(self):
         return self.strides
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Rate(Parameter):
     rate: Annotated[float, FloatRange(0, 0.5)]
     def evaluate(self):
         return self.rate
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Padding(Parameter):
     padding: Annotated[str, VarRange([ "valid", "same" ])]
     def evaluate(self):
         return self.padding
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Activation(Parameter):
     activation: Annotated[str, VarRange([ "relu", "selu", "elu", "tanh", "sigmoid", "linear" ])]
     def evaluate(self):
         return self.activation
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class ConvL(LType):
     filters: Filters
     ksize: Ksize
@@ -106,16 +107,16 @@ class ConvL(LType):
     padding: Padding
     activation: Activation
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class DenseL(LType):
     units: Units
     activation: Activation
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class DropoutL(LType):
     rate: Rate
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class PoolL(LType):
     pool_type: PoolType
     ksize: Ksize
@@ -207,7 +208,9 @@ y_train = np_utils.to_categorical(y_train, num_classes)
 y_test = np_utils.to_categorical(y_test, num_classes)
 data_train, data_test = (X_train[:gv.TRAIN_SIZE], y_train[:gv.TRAIN_SIZE]), (X_test[:gv.TEST_SIZE], y_test[:gv.TEST_SIZE])
 
+
 def fitness_function(data):
+    @functools.lru_cache
     def ff(ind: Start):
         model = evaluate(ind, data_train)
         if not model:
