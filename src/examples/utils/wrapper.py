@@ -86,10 +86,12 @@ def run_experiments(
     if ff_test:
         test_fitness = ff_test(phenotype)
     fitness = ff(phenotype)
+    depth = phenotype.gengy_distance_to_term
+    nodes = phenotype.gengy_nodes
     print(phenotype)
     print(f"With fitness: {fitness}")
     print(f"With test fitness: {test_fitness}")
-    csv_row = [ fitness, test_fitness, seed, benchmark_name, individual.genotype, phenotype, prods ]
+    csv_row = [ fitness, test_fitness, seed, benchmark_name, individual.genotype, phenotype, prods, depth, nodes ]
     with open(f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/main.csv", "a", newline="") as outfile:
         writer = csv.writer(outfile)
         writer.writerow(csv_row)
@@ -173,9 +175,11 @@ def run_synthetic_experiments(
 
                 individual, fitness, phenotype, prods = evolve(seed, False)
                 fitness = ff(phenotype)
+                depth = phenotype.gengy_distance_to_term
+                nodes = phenotype.gengy_nodes
                 print(phenotype)
                 print(f"With fitness: {fitness}")
-                csv_row = [ fitness, seed, benchmark_name, individual.genotype, phenotype, prods, ff_level, target_ind, max_depth, params["MAX_INIT_DEPTH"], params["POPULATION_SIZE"], params["ELITSM"], params["TARGET_FITNESS"], params["PROBABILITY_CO"], params["PROBABILITY_MUT"], params["NOVELTY"], params["TOURNAMENT_SIZE"], grammar_depth_min, grammar_depth_max, grammar_n_non_terminals, grammar_n_prods_occurrences, grammar_n_recursive_prods ]
+                csv_row = [ fitness, seed, benchmark_name, individual.genotype, phenotype, prods, ff_level, target_ind, max_depth, params["MAX_INIT_DEPTH"], params["POPULATION_SIZE"], params["ELITSM"], params["TARGET_FITNESS"], params["PROBABILITY_CO"], params["PROBABILITY_MUT"], params["NOVELTY"], params["TOURNAMENT_SIZE"], grammar_depth_min, grammar_depth_max, grammar_n_non_terminals, grammar_n_prods_occurrences, grammar_n_recursive_prods, depth, nodes ]
                 with open(f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/main.csv", "a", newline="") as outfile:
                     writer = csv.writer(outfile)
                     writer.writerow(csv_row)
