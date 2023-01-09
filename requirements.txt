@@ -1,11 +1,13 @@
 git+https://github.com/alcides/GeneticEngine@72e5fc05218a99a78425673fddb400cd81ff31d8#egg=GeneticEngine
-pandas
-numpy
-seaborn
-scikit-learn
-keras
-tensorflow==2.9.0; sys_platform != 'darwin' or platform_machine != 'arm64'
+pandas==1.5.1
+numpy==1.23.4
+seaborn==0.11.2
+scikit-learn==1.0.2
+# Linux + Windows + Macos x86
+keras==2.11.0; sys_platform != 'darwin' or platform_machine != 'arm64'
+tensorflow==2.11.0; sys_platform != 'darwin' or platform_machine != 'arm64'
+# Macos Arm64
+keras==2.9.0; sys_platform == 'darwin' and platform_machine == 'arm64'
 tensorflow-macos==2.9.0; sys_platform == 'darwin' and platform_machine == 'arm64'
 tensorflow-metal==0.5; sys_platform == 'darwin' and platform_machine == 'arm64'
-configs
-polyleven
+polyleven==0.8
