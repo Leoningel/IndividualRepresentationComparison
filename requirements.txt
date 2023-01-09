@@ -2,8 +2,9 @@ geneticengine==0.0.50
 pandas
 numpy
 seaborn
-sklearn
+scikit-learn
 keras
 tensorflow==2.11.0; sys_platform != 'darwin' or platform_machine != 'arm64'
 tensorflow-macos==2.11.0; sys_platform == 'darwin' and platform_machine == 'arm64'
 configs
+polyleven

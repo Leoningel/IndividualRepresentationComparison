@@ -13,7 +13,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     seed = args.seed
 
-    from examples.dynamic_grammar_ex import grammar_and_ff_def
+    from examples.synthetic_grammar_ex import grammar_and_ff_def
     grammar, ffs = grammar_and_ff_def(seed=seed)
     
     run_synthetic_experiments(grammar, ffs_and_target_ind=ffs(), benchmark_name=f"synthetic", seed=seed)
