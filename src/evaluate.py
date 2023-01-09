@@ -1,7 +1,7 @@
 import csv
 import pandas as pd
 import sys
-import configs.standard as gv
+import examples.utils.global_vars as gv
 
 
 
