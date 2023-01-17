@@ -1,0 +1,7 @@
+# Linux + Windows + Macos x86
+keras==2.11.0; sys_platform != 'darwin' or platform_machine != 'arm64'
+tensorflow==2.11.0; sys_platform != 'darwin' or platform_machine != 'arm64'
+# Macos Arm64
+keras==2.9.0; sys_platform == 'darwin' and platform_machine == 'arm64'
+tensorflow-macos==2.9.0; sys_platform == 'darwin' and platform_machine == 'arm64'
+tensorflow-metal==0.5; sys_platform == 'darwin' and platform_machine == 'arm64'

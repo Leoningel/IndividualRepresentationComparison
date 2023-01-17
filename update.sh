@@ -9,6 +9,5 @@ fi
 
 
 git pull 
-pyenv local 3.11.1
+pyenv local pypy3
 source venv/bin/activate
-python -m pip install -r requirements.txt
