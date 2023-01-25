@@ -67,7 +67,7 @@ class GenerationCallback(Callback):
 
     def end_evolution(self):
         pass
-
+    
 
 def run_experiments(
     grammar,
