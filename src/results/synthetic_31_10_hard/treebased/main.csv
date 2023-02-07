@@ -1,0 +1,1 @@
+31,synthetic_31_10_hard,"Grammar<Starting=NT_0002,Productions=[NT_0002 -> NT_0002_P_00000(__a: bool, __b: bool, __c: int)]>",hard,treebased,10,22,5.1564507484436035,0,100,"NT_0002_P_00000(__a=False, __b=False, __c=57)",47,5,0.6332343076115333,0.9791074985602892,3,3,2,2,1,{1: 1},0,3,1,1,6

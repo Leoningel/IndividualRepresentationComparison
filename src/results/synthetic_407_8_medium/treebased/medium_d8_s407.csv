@@ -1,0 +1,6 @@
+Fitness,Depth,Nodes,Generations,time_since_the_start_of_the_evolution,seed,genotype_as_str
+35.0,2,2,1,0.9890842437744141,407,"NT_0005_P_00000(__a=NT_0005_P_00003(__a=97, __b=30, __c=False), __b=False, __c=91, __d=False)"
+35.0,2,2,2,1.6787550449371338,407,"NT_0005_P_00000(__a=NT_0005_P_00003(__a=87, __b=68, __c=False), __b=False, __c=54, __d=False)"
+21.0,4,4,3,1.8153886795043945,407,"NT_0005_P_00000(__a=NT_0005_P_00000(__a=NT_0005_P_00000(__a=NT_0005_P_00003(__a=79, __b=98, __c=True), __b=True, __c=3, __d=True), __b=False, __c=27, __d=False), __b=True, __c=48, __d=True)"
+21.0,4,4,4,1.9616382122039795,407,"NT_0005_P_00000(__a=NT_0005_P_00000(__a=NT_0005_P_00000(__a=NT_0005_P_00003(__a=79, __b=98, __c=True), __b=True, __c=3, __d=True), __b=False, __c=27, __d=False), __b=True, __c=48, __d=True)"
+14.0,5,5,5,2.1055092811584473,407,"NT_0005_P_00000(__a=NT_0005_P_00000(__a=NT_0005_P_00000(__a=NT_0005_P_00000(__a=NT_0005_P_00003(__a=97, __b=20, __c=False), __b=False, __c=91, __d=False), __b=True, __c=51, __d=True), __b=False, __c=9, __d=True), __b=False, __c=91, __d=False)"

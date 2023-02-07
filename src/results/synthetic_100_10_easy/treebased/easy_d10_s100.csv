@@ -1,0 +1,2 @@
+Fitness,Depth,Nodes,Generations,time_since_the_start_of_the_evolution,seed,genotype_as_str
+0.0,3,4,1,0.24330663681030273,100,"NT_0006_P_00000(__a=NT_0001_P_00000(__a=9), __b=NT_0005_P_00000(__a=NT_0000_P_00000(__a=2)))"
