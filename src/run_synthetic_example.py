@@ -1,19 +1,45 @@
-
 from argparse import ArgumentParser
+import random
+from examples.synthetic_grammar_ex import generate_problem
 from examples.utils.wrapper import run_synthetic_experiments
 
-from geneticengine.core.representations.tree.treebased import treebased_representation
-from geneticengine.core.representations.grammatical_evolution.ge import ge_representation
-from geneticengine.core.representations.grammatical_evolution.dynamic_structured_ge import dsge_representation
-
 if __name__ == "__main__":
-    
+
     parser = ArgumentParser()
     parser.add_argument("-s", "--seed", dest="seed", type=int, default=123)
+    parser.add_argument(
+        "-r", "--representation", dest="representation", type=int, default=0
+    )
+    parser.add_argument("-d", "--depth", dest="depth", type=int, default=0)
+    parser.add_argument("-f", "--fitness", dest="fitness", type=int, default=0)
     args = parser.parse_args()
-    seed = args.seed
+    base_seed = args.seed
+    random.seed(base_seed)
 
-    from examples.synthetic_grammar_ex import grammar_and_ff_def
-    grammar, ffs = grammar_and_ff_def(seed=seed)
-    
-    run_synthetic_experiments(grammar, ffs_and_target_ind=ffs(), benchmark_name=f"synthetic", seed=seed)
+    target_depth = [8, 10, 12, 14, 16][args.depth]
+
+    (
+        seed,
+        grammar,
+        target_individual,
+        target_depth,
+        fitness_functions,
+        non_terminals_count,
+        recursive_non_terminals_count,
+        average_productions_per_terminal,
+        non_terminals_per_production,
+    ) = generate_problem(base_seed, target_depth)
+
+    run_synthetic_experiments(
+        benchmark_name=f"synthetic_{seed}_{target_depth}_{fitness_functions[args.fitness][0]}",
+        seed=seed,
+        grammar=grammar,
+        representation_index=args.representation,
+        target_individual=target_individual,
+        target_depth=target_depth,
+        fitness_function=fitness_functions[args.fitness],
+        non_terminals_count=non_terminals_count,
+        recursive_non_terminals_count=recursive_non_terminals_count,
+        average_productions_per_terminal=average_productions_per_terminal,
+        non_terminals_per_production=non_terminals_per_production,
+    )

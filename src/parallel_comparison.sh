@@ -9,7 +9,7 @@
 
 #SBATCH --array=0-89                    # iterate values between 0 and 59, inclusive
 
-cd ..
-pip install -r requirements.txt
-cd src
+pyenv local 3.11.1
+source ../venv/bin/activate
+
 python run_example.py -s $(expr $SLURM_ARRAY_TASK_ID % 30) -r $(expr $SLURM_ARRAY_TASK_ID / 30) -e $*

@@ -1,11 +1,10 @@
-GeneticEngine/
-PonyGE2
+src/results
+
 archive
 *.pdf
 *.csv
 !src/examples/data/*
 !src/examples/data/GameOfLife/*
-results/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
