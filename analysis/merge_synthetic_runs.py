@@ -1,7 +1,7 @@
 import pathlib
 import pandas as pd
 
-container = pathlib.Path("src/results")
+container = pathlib.Path("../results")
 
 def process_main(
     file: pathlib.Path, seed: int, depth: int, difficulty: str, method: str

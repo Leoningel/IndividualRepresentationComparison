@@ -10,5 +10,4 @@
 cd ..
 pyenv local pypy3
 source venv/bin/activate
-cd src
 pypy3 run_synthetic_example.py $@
