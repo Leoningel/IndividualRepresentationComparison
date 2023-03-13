@@ -15,3 +15,8 @@
 
 
 
+## Steps to analyse results
+
+Download the lastest run from: https://cirrus.ciencias.ulisboa.pt/owncloud/s/MpBKaPtJef2eTE5
+
+Place those 2 parquet files in the folder src/results
