@@ -184,23 +184,33 @@ grammar = extract_grammar([ActionBlock, Action, IfFood, Move, Right, Left], Acti
 fitness_function = lambda p: simulate(p, map)
 
 params = {
-    'MINIMIZE': False,
-    'NUMBER_OF_ITERATIONS': 100,
-    'MIN_INIT_DEPTH': 2,
-    'MIN_DEPTH': None,
-    'MAX_INIT_DEPTH': 6,
-    'MAX_DEPTH': 10,
-    'POPULATION_SIZE': 20,
-    'ELITSM': 1,
-    'TARGET_FITNESS': None,
+    "MINIMIZE": False,
+    "NUMBER_OF_ITERATIONS": 100,
+    "MIN_INIT_DEPTH": 2,
+    "MIN_DEPTH": None,
+    "MAX_INIT_DEPTH": 6,
+    "MAX_DEPTH": 10,
+    "POPULATION_SIZE": 20,
+    "ELITISM": 1,
+    "TARGET_FITNESS": None,
 }
 
 if __name__ == "__main__":
-    representations = [ 'ge', 'dsge', 'treebased' ]
-    
+    representations = ["ge", "dsge", "treebased"]
+
     parser = ArgumentParser()
     parser.add_argument("-s", "--seed", dest="seed", type=int, default=0)
-    parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
+    parser.add_argument(
+        "-r", "--representation", dest="representation", type=int, default=0
+    )
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function, ff_test=None, folder_name="santafe", seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(
+        grammar,
+        ff=fitness_function,
+        ff_test=None,
+        folder_name="santafe",
+        seed=args.seed,
+        params=params,
+        representation=representations[args.representation],
+    )

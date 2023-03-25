@@ -86,6 +86,7 @@ def fitness_function(i: Expr):
     ypred = [_clf(line) for line in np.rollaxis(Xtrain, 0)]
     return f1_score(ytrain, ypred)
 
+
 def fitness_function_test(i: Expr):
     _clf = evaluate(i)
     ypred = [_clf(line) for line in np.rollaxis(Xtest, 0)]
@@ -95,23 +96,33 @@ def fitness_function_test(i: Expr):
 grammar = extract_grammar([And, Or, Not, MatrixElement], Condition)
 
 params = {
-    'MINIMIZE': False,
-    'NUMBER_OF_ITERATIONS': 50,
-    'MIN_INIT_DEPTH': 2,
-    'MIN_DEPTH': None,
-    'MAX_INIT_DEPTH': 6,
-    'MAX_DEPTH': 10,
-    'POPULATION_SIZE': 50,
-    'ELITSM': 5,
-    'TARGET_FITNESS': None,
+    "MINIMIZE": False,
+    "NUMBER_OF_ITERATIONS": 50,
+    "MIN_INIT_DEPTH": 2,
+    "MIN_DEPTH": None,
+    "MAX_INIT_DEPTH": 6,
+    "MAX_DEPTH": 10,
+    "POPULATION_SIZE": 50,
+    "ELITISM": 5,
+    "TARGET_FITNESS": None,
 }
 
 if __name__ == "__main__":
-    representations = [ 'ge', 'dsge', 'treebased' ]
-    
+    representations = ["ge", "dsge", "treebased"]
+
     parser = ArgumentParser()
     parser.add_argument("-s", "--seed", dest="seed", type=int, default=0)
-    parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
+    parser.add_argument(
+        "-r", "--representation", dest="representation", type=int, default=0
+    )
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function, ff_test=fitness_function_test, folder_name="game_of_life", seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(
+        grammar,
+        ff=fitness_function,
+        ff_test=fitness_function_test,
+        folder_name="game_of_life",
+        seed=args.seed,
+        params=params,
+        representation=representations[args.representation],
+    )

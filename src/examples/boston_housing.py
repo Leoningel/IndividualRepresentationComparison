@@ -42,6 +42,7 @@ from geneticengine.metrics import mse
 
 from examples.utils.wrapper import run_experiments
 import warnings
+
 warnings.filterwarnings("ignore")
 
 
@@ -53,7 +54,9 @@ bunch = pd.read_csv(DATA_FILE, delimiter=",")
 y = bunch["MEDV"]
 X = bunch.drop(["MEDV"], axis=1)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
 data_train = (X_train, y_train)
 data_test = (X_test, y_test)
 
@@ -79,34 +82,34 @@ class Literal(Number):
 
 
 grammar = extract_grammar(
-        [
-            Plus,
-            Minus,
-            Mul,
-            SafeDiv,
-            Literal,
-            Var,
-            SafeSqrt,
-            Exp,
-            Sin,
-            Tanh,
-            SafeLog,
-        ],
-        Number,
-    )
+    [
+        Plus,
+        Minus,
+        Mul,
+        SafeDiv,
+        Literal,
+        Var,
+        SafeSqrt,
+        Exp,
+        Sin,
+        Tanh,
+        SafeLog,
+    ],
+    Number,
+)
 
-    # <e>  ::=  <e>+<e>|
-    #       <e>-<e>|
-    #       <e>*<e>|
-    #       pdiv(<e>,<e>)|
-    #       psqrt(<e>)|
-    #       np.sin(<e>)|
-    #       np.tanh(<e>)|
-    #       np.exp(<e>)|
-    #       plog(<e>)|
-    #       x[:, 0]|x[:, 1]|x[:, 2]|x[:, 3]|x[:, 4]|
-    #       <c>
-    # <c>  ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+# <e>  ::=  <e>+<e>|
+#       <e>-<e>|
+#       <e>*<e>|
+#       pdiv(<e>,<e>)|
+#       psqrt(<e>)|
+#       np.sin(<e>)|
+#       np.tanh(<e>)|
+#       np.exp(<e>)|
+#       plog(<e>)|
+#       x[:, 0]|x[:, 1]|x[:, 2]|x[:, 3]|x[:, 4]|
+#       <c>
+# <c>  ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 
 def fitness_function(data):
@@ -130,23 +133,33 @@ def fitness_function(data):
 
 
 params = {
-    'MINIMIZE': True,
-    'NUMBER_OF_ITERATIONS': 50,
-    'MIN_INIT_DEPTH': 2,
-    'MIN_DEPTH': None,
-    'MAX_INIT_DEPTH': 6,
-    'MAX_DEPTH': 10,
-    'POPULATION_SIZE': 200,
-    'ELITSM': 5,
-    'TARGET_FITNESS': 0,
+    "MINIMIZE": True,
+    "NUMBER_OF_ITERATIONS": 50,
+    "MIN_INIT_DEPTH": 2,
+    "MIN_DEPTH": None,
+    "MAX_INIT_DEPTH": 6,
+    "MAX_DEPTH": 10,
+    "POPULATION_SIZE": 200,
+    "ELITISM": 5,
+    "TARGET_FITNESS": 0,
 }
 
 if __name__ == "__main__":
-    representations = [ 'ge', 'dsge', 'treebased' ]
-    
+    representations = ["ge", "dsge", "treebased"]
+
     parser = ArgumentParser()
     parser.add_argument("-s", "--seed", dest="seed", type=int, default=0)
-    parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
+    parser.add_argument(
+        "-r", "--representation", dest="representation", type=int, default=0
+    )
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="boston_housing", seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(
+        grammar,
+        ff=fitness_function(data_train),
+        ff_test=fitness_function(data_test),
+        folder_name="boston_housing",
+        seed=args.seed,
+        params=params,
+        representation=representations[args.representation],
+    )

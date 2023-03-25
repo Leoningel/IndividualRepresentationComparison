@@ -1,37 +1,52 @@
 from __future__ import annotations
-import csv
 import os
 
 from random import Random
 import sys
-import time
 import traceback
 
 from typing import Any
 
+from geneticengine.algorithms.gp.operators.stop import (
+    AnyOfStoppingCriterium,
+    SingleFitnessTargetStoppingCriterium,
+)
+from geneticengine.algorithms.hill_climbing import GenericMutationStep
+from geneticengine.algorithms.random_mutations import (
+    ElitismStep,
+    ParallelStep,
+    SequenceStep,
+)
+from geneticengine.algorithms.random_search import NoveltyStep
+from geneticengine.core.representations.grammatical_evolution.dynamic_structured_ge import (
+    DynamicStructuredGrammaticalEvolutionRepresentation,
+)
+from geneticengine.core.representations.grammatical_evolution.ge import (
+    GrammaticalEvolutionRepresentation,
+)
+from geneticengine.off_the_shelf.classifiers import TreeBasedRepresentation
+from geneticengine.prelude import RandomSource
+
 import examples.utils.global_vars as gv
 
 from geneticengine.algorithms.callbacks.csv_callback import CSVCallback
-from geneticengine.algorithms.gp.gp import GP
+from geneticengine.algorithms.gp.gp import GP, GenericCrossoverStep, TournamentSelection
 from geneticengine.core.grammar import Grammar
 from geneticengine.core.problems import SingleObjectiveProblem
-from geneticengine.core.representations.grammatical_evolution.dynamic_structured_ge import (  # noqa: E501
-    dsge_representation,
+from geneticengine.algorithms.callbacks.callback import (
+    Callback,
+    TimeStoppingCriterium,
 )
-from geneticengine.core.representations.grammatical_evolution.ge import (
-    ge_representation,
-)
-from geneticengine.core.representations.tree.initialization_methods import (
-    Random_Production,
-)
-from geneticengine.core.representations.tree.treebased import treebased_representation
-from geneticengine.algorithms.callbacks.callback import Callback
 
 import platform
+
 
 if platform.python_implementation() == "PyPy":
 
     class MemoryCallback(Callback):
+        def __init__(self):
+            self.mem_peak = 0
+
         def process_iteration(self, generation: int, population, time: float, gp):
             pass
 
@@ -44,6 +59,7 @@ else:
     class MemoryCallback(Callback):
         def __init__(self):
             tracemalloc.start()
+            self.mem_peak = 0
 
         def process_iteration(self, generation: int, population, time: float, gp):
             pass
@@ -53,117 +69,12 @@ else:
             tracemalloc.stop()
 
 
-class GenerationCallback(Callback):
-    def __init__(self):
-        self.generations = 0
-        self.first_generation_fitness = None
-
-    def process_iteration(self, generation: int, population, time: float, gp: GP):
-        self.generations = generation
-        if self.first_generation_fitness is None:
-            self.first_generation_fitness = gp.get_best_individual(
-                gp.problem, population
-            )
-
-    def end_evolution(self):
-        pass
-    
-
-def run_experiments(
-    grammar,
-    ff,
-    ff_test,
-    benchmark_name,
-    seed,
-    params: dict,
-    representation="treebased",
-):
-    novelty = 0
-    if representation == "ge":
-        repr = ge_representation
-        repr.mutation_method = "per_codon_mutate"
-        repr.codon_prob = 0.05
-    elif representation == "dsge":
-        repr = dsge_representation
-        repr.mutation_method = "per_codon_mutate"
-        repr.codon_prob = 0.05
-    else:
-        repr = treebased_representation
-        novelty = int(params["POPULATION_SIZE"] * 0.05)
-    repr.method = Random_Production()
-
-    def evolve(
-        seed,
-        mode,
-    ):
-        print(grammar)
-
-        so_problem = SingleObjectiveProblem(
-            minimize=params["MINIMIZE"],
-            fitness_function=ff,
-            target_fitness=params["TARGET_FITNESS"],
-        )
-
-        alg = GP(
-            grammar,
-            representation=repr,
-            problem=so_problem,
-            probability_crossover=gv.PROB_CROSSOVER,
-            probability_mutation=gv.PROB_MUTATION,
-            cross_over_return_one_individual=True,
-            number_of_generations=params["NUMBER_OF_ITERATIONS"],
-            min_init_depth=params["MIN_INIT_DEPTH"],
-            min_depth=params["MIN_DEPTH"],
-            max_init_depth=params["MAX_INIT_DEPTH"],
-            max_depth=params["MAX_DEPTH"],
-            population_size=params["POPULATION_SIZE"],
-            selection_method=("tournament", gv.TOURNAMENT),
-            n_elites=params["ELITSM"],
-            n_novelties=novelty,
-            save_to_csv=CSVCallback(
-                filename=f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/{seed}.csv",
-                test_data=ff_test,
-                save_genotype_as_string=True,
-                save_productions=True,
-            ),
-            seed=seed,
-            timer_stop_criteria=mode,
-        )
-        (b, bf, bp) = alg.evolve(verbose=1)
-        return b, bf, bp, b.count_prods(repr.genotype_to_phenotype, grammar)
-
-    individual, fitness, phenotype, prods = evolve(seed, False)
-    test_fitness = None
-    if ff_test:
-        test_fitness = ff_test(phenotype)
-    fitness = ff(phenotype)
-    depth = phenotype.gengy_distance_to_term
-    nodes = phenotype.gengy_nodes
-    print(phenotype)
-    print(f"With fitness: {fitness}")
-    print(f"With test fitness: {test_fitness}")
-    csv_row = [
-        fitness,
-        test_fitness,
-        seed,
-        benchmark_name,
-        individual.genotype,
-        phenotype,
-        prods,
-    ]
-    with open(
-        f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/main.csv",
-        "a",
-        newline="",
-    ) as outfile:
-        writer = csv.writer(outfile)
-        writer.writerow(csv_row)
-
-
 def single_run(
+    base_seed,
+    timeout,
     seed,
     params,
-    grammar,
+    grammar: Grammar,
     benchmark_name,
     representation,
     repr,
@@ -176,102 +87,99 @@ def single_run(
     non_terminals_per_production: int,
 ):
     print("Single run", benchmark_name, seed, representation, ff_level, max_depth)
-    repr.method = Random_Production()
+
+    (
+        (grammar_depth_min, grammar_depth_max),
+        grammar_n_non_terminals,
+        (grammar_n_prods_occurrences, grammar_n_recursive_prods),
+    ) = grammar.get_grammar_properties_summary()
 
     so_problem = SingleObjectiveProblem(
         minimize=params["MINIMIZE"],
         fitness_function=ff,
-        target_fitness=params["TARGET_FITNESS"],
     )
     os.makedirs(
         f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/", exist_ok=True
     )
     mcb = MemoryCallback()
-    gcb = GenerationCallback()
-    start_time = time.time()
-    alg = GP(
-        grammar,
-        representation=repr,
-        problem=so_problem,
-        probability_crossover=params["PROBABILITY_CO"],
-        probability_mutation=params["PROBABILITY_MUT"],
-        cross_over_return_one_individual=True,
-        number_of_generations=params["NUMBER_OF_ITERATIONS"],
-        # max_init_depth=min(max_depth, params["MAX_INIT_DEPTH"]),
-        max_depth=max_depth,
-        population_size=params["POPULATION_SIZE"],
-        selection_method=("tournament", params["TOURNAMENT_SIZE"]),
-        n_elites=params["ELITSM"],
-        n_novelties=params["NOVELTY"],
-        save_to_csv=CSVCallback(
-            filename=f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/{ff_level}_d{max_depth}_s{seed}.csv",
-            save_genotype_as_string=True,
-            save_productions=False,
-        ),
-        callbacks=[mcb, gcb],
-        seed=seed,
-        timer_stop_criteria=False,
-        target_fitness=0,
-    )
-    (individual, fitness, phenotype) = alg.evolve(verbose=1)
-    end_time = time.time() - start_time
-    fitness = ff(phenotype)
-    (
-        (grammar_depth_min, grammar_depth_max),
-        grammar_n_non_terminals,
-        (grammar_n_prods_occurrences, grammar_n_recursive_prods),
-    ) = grammar.get_grammar_specifics()
 
-    csv_row = [
-        seed,
-        benchmark_name,
-        grammar,
-        ff_level,
-        representation,
-        max_depth,
-        fitness,
-        end_time,
-        mcb.mem_peak,
-        gcb.generations,
-        gcb.first_generation_fitness,
-        # individual.genotype,
-        # phenotype,
-        # params["MAX_INIT_DEPTH"],
-        params["POPULATION_SIZE"],
-        params["ELITSM"],
-        params["PROBABILITY_CO"],
-        params["PROBABILITY_MUT"],
-        params["NOVELTY"],
-        params["TOURNAMENT_SIZE"],
-        grammar_depth_min,
-        grammar_depth_max,
-        grammar_n_non_terminals,
-        grammar_n_prods_occurrences,
-        grammar_n_recursive_prods,
-        non_terminals_count,
-        recursive_non_terminals_count,
-        average_productions_per_terminal,
-        non_terminals_per_production,
-    ]
-    with open(
-        f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/main.csv",
-        "a",
-        newline="",
-    ) as outfile:
-        writer = csv.writer(outfile)
-        writer.writerow(csv_row)
+    csvcb = CSVCallback(
+        filename=f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/{ff_level}_d{max_depth}_s{seed}.csv",
+        extra_columns={
+            "Grammar Seed": lambda gen, pop, time, gp, ind: base_seed,
+            "GP Seed": lambda gen, pop, time, gp, ind: seed,
+            "Benchmark Name": lambda gen, pop, time, gp, ind: benchmark_name,
+            "Grammar": lambda gen, pop, time, gp, ind: grammar,
+            "Fitness Difficulty": lambda gen, pop, time, gp, ind: ff_level,
+            "Representation": lambda gen, pop, time, gp, ind: str(repr.__name__),
+            "Max Depth": lambda gen, pop, time, gp, ind: max_depth,
+            "Mem Peak": lambda gen, pop, time, gp, ind: mcb.mem_peak,
+            "Population Size": lambda gen, pop, time, gp, ind: params[
+                "POPULATION_SIZE"
+            ],
+            "Elitism": lambda gen, pop, time, gp, ind: params["ELITISM"],
+            "Novelty": lambda gen, pop, time, gp, ind: params["NOVELTY"],
+            "Probability Crossover": lambda gen, pop, time, gp, ind: params[
+                "PROBABILITY_CO"
+            ],
+            "Probability Mutation": lambda gen, pop, time, gp, ind: params[
+                "PROBABILITY_MUT"
+            ],
+            "Tournament Size": lambda gen, pop, time, gp, ind: params[
+                "TOURNAMENT_SIZE"
+            ],
+            "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,
+            "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,
+            "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,
+            "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
+            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
+            "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,
+            "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,
+            "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,
+            "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production,
+        },
+    )
+
+    remaining = params["POPULATION_SIZE"] - params["ELITISM"] - params["NOVELTY"]
+
+    step = ParallelStep(
+        [
+            ElitismStep(),
+            NoveltyStep(),
+            SequenceStep(
+                TournamentSelection(params["TOURNAMENT_SIZE"]),
+                GenericCrossoverStep(params["PROBABILITY_CO"]),
+                GenericMutationStep(params["PROBABILITY_MUT"]),
+            ),
+        ],
+        weights=[params["ELITISM"], params["NOVELTY"], remaining],
+    )
+
+    alg = GP(
+        representation=repr(grammar=grammar, max_depth=max_depth),
+        problem=so_problem,
+        random_source=RandomSource(seed),
+        population_size=params["POPULATION_SIZE"],
+        step=step,
+        stopping_criterium=AnyOfStoppingCriterium(
+            SingleFitnessTargetStoppingCriterium(params["TARGET_FITNESS"]),  # TODO
+            TimeStoppingCriterium(timeout),
+        ),
+        callbacks=[mcb, csvcb],
+    )
+    ind = alg.evolve()
 
     print(
+        "seed",
+        seed,
         "difficulty",
         ff_level,
         "version",
         representation,
-        "generations",
-        gcb.generations,
+        "grammar",
+        grammar,
         "fitness",
-        fitness,
-        "max_time",
-        end_time,
+        ind.get_fitness(so_problem),
         "max_memory",
         mcb.mem_peak,
         "non_terminals",
@@ -294,7 +202,7 @@ def make_synthetic_params(seed: int):
         "NUMBER_OF_ITERATIONS": 100,
         "MAX_INIT_DEPTH": round(random.normalvariate(5, 1.5)),  # vary
         "POPULATION_SIZE": pop_size,  # vary
-        "ELITSM": round(
+        "ELITISM": round(
             min(max(random.normalvariate(5, 2), 0), pop_size / 10)
         ),  # vary between 0 - 10%
         "TARGET_FITNESS": 0,
@@ -310,21 +218,19 @@ def make_synthetic_params(seed: int):
 
 
 def make_representations():
-    ge_repr = ge_representation
-    ge_repr.mutation_method = "per_codon_mutate"
-    ge_repr.codon_prob = 0.05
+    ge_repr = GrammaticalEvolutionRepresentation
 
-    dsge_repr = dsge_representation
-    dsge_repr.mutation_method = "per_codon_mutate"
-    dsge_repr.codon_prob = 0.05
+    dsge_repr = DynamicStructuredGrammaticalEvolutionRepresentation
 
-    tree_repr = treebased_representation
+    tree_repr = TreeBasedRepresentation
 
     return [("ge", ge_repr), ("dsge", dsge_repr), ("treebased", tree_repr)]
 
 
 def run_synthetic_experiments(
     benchmark_name: str,
+    base_seed: int,
+    timeout: int,
     seed: int,
     grammar: Grammar,
     representation_index: int,
@@ -341,6 +247,8 @@ def run_synthetic_experiments(
     ff_level, ff = fitness_function
     try:
         single_run(
+            base_seed,
+            timeout,
             seed,
             params,
             grammar,
