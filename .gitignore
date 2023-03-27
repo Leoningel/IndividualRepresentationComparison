@@ -146,3 +146,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 data_alcides/synthetic_summary.parquet
+data_alcides/synthetic_evolution.parquet
