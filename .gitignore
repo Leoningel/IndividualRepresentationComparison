@@ -2,7 +2,8 @@ src/results
 
 archive
 *.pdf
-!data_alcides/*
+!data_alcides/figures/generations/*
+!data_alcides/figures/time/*
 *.csv
 !src/examples/data/*
 !src/examples/data/GameOfLife/*
