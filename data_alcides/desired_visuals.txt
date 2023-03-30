@@ -1,0 +1,4 @@
+- Scatter plots with fitnesses in log scale (handle 0s)
+- violin/box plot
+- swarm plot (but takes a long time)
+    - Where different representations are in diffirent columns
