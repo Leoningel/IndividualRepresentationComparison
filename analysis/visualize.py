@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     try:
         folder = sys.argv[1]
-    except:
+    except Exception:
         print("You must specify a folder!")
         sys.exit(-1)
 
@@ -53,11 +53,48 @@ if __name__ == "__main__":
             file_name=f"results/{folder}/test_fitness_comp_.pdf",
             title=f"Test fitness comparison ({folder})",
         )
-    except:
+    except Exception:
         pass
-    # for idx, folder_name in enumerate(folder_names):
-    #     plot_prods_comparison(folder_name, title=f"Production comparison ({labels[idx]}, )", file_name=f'results/{folder}/{folders[idx]}/productions_comp_.pdf', keep_in_prods=[ 'VarCh', 'VarGl', 'VarIns' ])
-    #     plot_prods_comparison(folder_name, title=f"Production comparison ({labels[idx]}, )", file_name=f'results/{folder}/{folders[idx]}/glucose_productions_comp_.pdf', keep_in_prods=[ 'VarGl2', 'VarGl4', 'VarGl7' ])
-    #     plot_prods_comparison(folder_name, title=f"Production comparison ({labels[idx]}, )", file_name=f'results/{folder}/{folders[idx]}/carbsh_productions_comp_.pdf', keep_in_prods=[ 'VarCh1011', 'VarCh1213', 'VarCh1415', 'VarCh1617', 'VarCh1819', 'VarCh2021', 'VarCh2223' ])
-    #     plot_prods_comparison(folder_name, title=f"Production comparison ({labels[idx]}, )", file_name=f'results/{folder}/{folders[idx]}/insuline_productions_comp_.pdf', keep_in_prods=[ 'VarIns24', 'VarIns2526', 'VarIns2728', 'VarIns2930', 'VarIns3132', 'VarIns3334', 'VarIns3536', 'VarIns3738' ])
-    #     pass
+    for idx, folder_name in enumerate(folder_names):
+        plot_prods_comparison(
+            folder_name,
+            title=f"Production comparison ({labels[idx]}, )",
+            file_name=f"results/{folder}/{folders[idx]}/productions_comp_.pdf",
+            keep_in_prods=["VarCh", "VarGl", "VarIns"],
+        )
+        plot_prods_comparison(
+            folder_name,
+            title=f"Production comparison ({labels[idx]}, )",
+            file_name=f"results/{folder}/{folders[idx]}/glucose_productions_comp_.pdf",
+            keep_in_prods=["VarGl2", "VarGl4", "VarGl7"],
+        )
+        plot_prods_comparison(
+            folder_name,
+            title=f"Production comparison ({labels[idx]}, )",
+            file_name=f"results/{folder}/{folders[idx]}/carbsh_productions_comp_.pdf",
+            keep_in_prods=[
+                "VarCh1011",
+                "VarCh1213",
+                "VarCh1415",
+                "VarCh1617",
+                "VarCh1819",
+                "VarCh2021",
+                "VarCh2223",
+            ],
+        )
+        plot_prods_comparison(
+            folder_name,
+            title=f"Production comparison ({labels[idx]}, )",
+            file_name=f"results/{folder}/{folders[idx]}/insuline_productions_comp_.pdf",
+            keep_in_prods=[
+                "VarIns24",
+                "VarIns2526",
+                "VarIns2728",
+                "VarIns2930",
+                "VarIns3132",
+                "VarIns3334",
+                "VarIns3536",
+                "VarIns3738",
+            ],
+        )
+        pass

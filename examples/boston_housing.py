@@ -1,30 +1,15 @@
 from __future__ import annotations
 from argparse import ArgumentParser
 
-import os
 from dataclasses import dataclass
 from math import isinf
 from sklearn.model_selection import train_test_split
 from typing import Annotated
-from typing import Any
-from typing import Callable
 
 import numpy as np
 import pandas as pd
 
-from geneticengine.algorithms.gp.gp import GP
 from geneticengine.core.grammar import extract_grammar
-from geneticengine.core.problems import SingleObjectiveProblem
-from geneticengine.core.representations.grammatical_evolution.ge import (
-    ge_representation,
-)
-from geneticengine.core.representations.grammatical_evolution.structured_ge import (
-    sge_representation,
-)
-from geneticengine.core.representations.grammatical_evolution.dynamic_structured_ge import (
-    dsge_representation,
-)
-from geneticengine.core.representations.tree.treebased import treebased_representation
 from geneticengine.grammars.basic_math import Exp
 from geneticengine.grammars.basic_math import SafeDiv
 from geneticengine.grammars.basic_math import SafeLog
@@ -42,12 +27,13 @@ from geneticengine.metrics import mse
 
 from examples.utils.wrapper import run_experiments
 import warnings
+
 warnings.filterwarnings("ignore")
 
 
 # This example is based on the grammar given in https://link.springer.com/chapter/10.1007/978-3-319-55696-3_20
 
-DATA_FILE = f"examples/data/housing.csv"
+DATA_FILE = "examples/data/housing.csv"
 
 bunch = pd.read_csv(DATA_FILE, delimiter=",")
 y = bunch["MEDV"]
@@ -79,34 +65,34 @@ class Literal(Number):
 
 
 grammar = extract_grammar(
-        [
-            Plus,
-            Minus,
-            Mul,
-            SafeDiv,
-            Literal,
-            Var,
-            SafeSqrt,
-            Exp,
-            Sin,
-            Tanh,
-            SafeLog,
-        ],
-        Number,
-    )
+    [
+        Plus,
+        Minus,
+        Mul,
+        SafeDiv,
+        Literal,
+        Var,
+        SafeSqrt,
+        Exp,
+        Sin,
+        Tanh,
+        SafeLog,
+    ],
+    Number,
+)
 
-    # <e>  ::=  <e>+<e>|
-    #       <e>-<e>|
-    #       <e>*<e>|
-    #       pdiv(<e>,<e>)|
-    #       psqrt(<e>)|
-    #       np.sin(<e>)|
-    #       np.tanh(<e>)|
-    #       np.exp(<e>)|
-    #       plog(<e>)|
-    #       x[:, 0]|x[:, 1]|x[:, 2]|x[:, 3]|x[:, 4]|
-    #       <c>
-    # <c>  ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+# <e>  ::=  <e>+<e>|
+#       <e>-<e>|
+#       <e>*<e>|
+#       pdiv(<e>,<e>)|
+#       psqrt(<e>)|
+#       np.sin(<e>)|
+#       np.tanh(<e>)|
+#       np.exp(<e>)|
+#       plog(<e>)|
+#       x[:, 0]|x[:, 1]|x[:, 2]|x[:, 3]|x[:, 4]|
+#       <c>
+# <c>  ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 
 def fitness_function(data):
@@ -130,23 +116,31 @@ def fitness_function(data):
 
 
 params = {
-    'MINIMIZE': True,
-    'NUMBER_OF_ITERATIONS': 50,
-    'MIN_INIT_DEPTH': 2,
-    'MIN_DEPTH': None,
-    'MAX_INIT_DEPTH': 6,
-    'MAX_DEPTH': 10,
-    'POPULATION_SIZE': 200,
-    'ELITSM': 5,
-    'TARGET_FITNESS': 0,
+    "MINIMIZE": True,
+    "NUMBER_OF_ITERATIONS": 50,
+    "MIN_INIT_DEPTH": 2,
+    "MIN_DEPTH": None,
+    "MAX_INIT_DEPTH": 6,
+    "MAX_DEPTH": 10,
+    "POPULATION_SIZE": 200,
+    "ELITSM": 5,
+    "TARGET_FITNESS": 0,
 }
 
 if __name__ == "__main__":
-    representations = [ 'ge', 'dsge', 'treebased' ]
-    
+    representations = ["ge", "dsge", "treebased"]
+
     parser = ArgumentParser()
     parser.add_argument("-s", "--seed", dest="seed", type=int, default=0)
     parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function(data_train), ff_test=fitness_function(data_test), folder_name="boston_housing", seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(
+        grammar,
+        ff=fitness_function(data_train),
+        ff_test=fitness_function(data_test),
+        folder_name="boston_housing",
+        seed=args.seed,
+        params=params,
+        representation=representations[args.representation],
+    )

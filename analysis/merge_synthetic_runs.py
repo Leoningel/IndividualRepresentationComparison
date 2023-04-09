@@ -3,14 +3,13 @@ import pandas as pd
 
 container = pathlib.Path("../results")
 
-def process_main(
-    file: pathlib.Path, seed: int, depth: int, difficulty: str, method: str
-):
+
+def process_main(file: pathlib.Path, seed: int, depth: int, difficulty: str, method: str):
     try:
         df = pd.read_csv(file)
         df.columns = [
-            "seed", 
-            "configuration_name", 
+            "seed",
+            "configuration_name",
             "grammar",
             "fitness difficulty",
             "representation",
@@ -18,23 +17,24 @@ def process_main(
             "fitness",
             "Execution Time",
             "Peak memory usage",
-            "Number of Generations", 
+            "Number of Generations",
             "Fitness of the first generation",
             "HP Population size",
             "HP Elitism size",
-            "HP Probability of Crossover", 
-            "HP Probability of Mutation", 
-            "HP Novelty size", 
+            "HP Probability of Crossover",
+            "HP Probability of Mutation",
+            "HP Novelty size",
             "GP tournament size",
-            "G Minimum Depth", 
+            "G Minimum Depth",
             "G Maximum Depth",
             "G Number of Non-terminals",
-            "G Production occurrences", 
-            "G Recursive Productions", 
+            "G Production occurrences",
+            "G Recursive Productions",
             "G Non-terminal Count",
             "G Recursive Non-terminal Count",
             "G Average Productions per Non-terminal",
-            "Non-terminals per Production" ]
+            "Non-terminals per Production",
+        ]
         df["Original Seed"] = seed
         df["Requested Depth"] = depth
         df["Fitness Difficulty"] = difficulty
@@ -45,9 +45,8 @@ def process_main(
         print(f"Could not load {file}")
         return None
 
-def process_file(
-    file: pathlib.Path, seed: int, depth: int, difficulty: str, method: str
-):
+
+def process_file(file: pathlib.Path, seed: int, depth: int, difficulty: str, method: str):
     try:
         df = pd.read_csv(file)
         df["Seed"] = seed
@@ -77,12 +76,13 @@ def import_dataframe():
                         if df_metadata is not None:
                             dfs_metadata.append(df_metadata)
                     else:
-                        df_evolution = process_file(
-                            file, int(seed), int(depth), difficulty, method.name
-                        )
+                        df_evolution = process_file(file, int(seed), int(depth), difficulty, method.name)
                         if df_evolution is not None:
                             dfs_evolution.append(df_evolution)
-    return (pd.concat(dfs_evolution, ignore_index=True), pd.concat(dfs_metadata, ignore_index=True))
+    return (
+        pd.concat(dfs_evolution, ignore_index=True),
+        pd.concat(dfs_metadata, ignore_index=True),
+    )
 
 
 def main():

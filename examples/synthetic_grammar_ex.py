@@ -57,12 +57,8 @@ def generate_target_individual(seed: int, grammar, target_depth: int = 10):
     r = RandomSource(seed)
     representation = treebased_representation
     representation.method = Random_Production(min_depth=target_depth)
-    target_individual = representation.create_individual(
-        r=r, g=grammar, depth=target_depth
-    )
-    individual_phenotype = representation.genotype_to_phenotype(
-        grammar, target_individual
-    )
+    target_individual = representation.create_individual(r=r, g=grammar, depth=target_depth)
+    individual_phenotype = representation.genotype_to_phenotype(grammar, target_individual)
     return individual_phenotype
 
 
@@ -84,9 +80,7 @@ def generate_fitness_functions(grammar, target_individual):
 
     def ff_medium(n):
         n_ind = Individual(n)
-        prods = n_ind.count_prods(
-            treebased_representation.genotype_to_phenotype, grammar
-        )
+        prods = n_ind.count_prods(treebased_representation.genotype_to_phenotype, grammar)
         prod_differences = 0
         for prod in prods.keys():
             prod_differences += abs(ti_prods[prod] - prods[prod])
@@ -96,9 +90,7 @@ def generate_fitness_functions(grammar, target_individual):
 
     def ff_easy(n):
         n_ind = Individual(n)
-        prods = n_ind.count_prods(
-            treebased_representation.genotype_to_phenotype, grammar
-        )
+        prods = n_ind.count_prods(treebased_representation.genotype_to_phenotype, grammar)
         return abs(ti_prods[random_key] - prods[random_key])
 
     return [("easy", ff_easy), ("medium", ff_medium), ("hard", ff_hard)]
@@ -119,10 +111,7 @@ def generate_problem(seed: int, target_depth: int):
             average_productions_per_terminal=average_productions_per_terminal,
             non_terminals_per_production=non_terminals_per_production,
         )
-        if (
-            not validate_grammar(grammar)
-            or grammar.get_min_tree_depth() >= target_depth
-        ):
+        if not validate_grammar(grammar) or grammar.get_min_tree_depth() >= target_depth:
             seedx += 10000
             print(f"Fail {seedx}")
             continue

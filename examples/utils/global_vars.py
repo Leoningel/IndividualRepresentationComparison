@@ -1,6 +1,6 @@
 TOURNAMENT = 5
 PROB_CROSSOVER = 1
-PROB_MUTATION = 1 # (lambda mapped : 1.0 / mapped)
+PROB_MUTATION = 1  # (lambda mapped : 1.0 / mapped)
 RESULTS_FOLDER = "results"
 PENALIZE_PERC = 0.2
 

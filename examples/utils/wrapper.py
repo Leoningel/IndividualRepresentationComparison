@@ -61,13 +61,11 @@ class GenerationCallback(Callback):
     def process_iteration(self, generation: int, population, time: float, gp: GP):
         self.generations = generation
         if self.first_generation_fitness is None:
-            self.first_generation_fitness = gp.get_best_individual(
-                gp.problem, population
-            )
+            self.first_generation_fitness = gp.get_best_individual(gp.problem, population)
 
     def end_evolution(self):
         pass
-    
+
 
 def run_experiments(
     grammar,
@@ -137,15 +135,9 @@ def run_experiments(
     if ff_test:
         test_fitness = ff_test(phenotype)
     fitness = ff(phenotype)
-    depth = phenotype.gengy_distance_to_term
-    nodes = phenotype.gengy_nodes
     print(phenotype)
     print(f"With fitness: {fitness}")
     print(f"With test fitness: {test_fitness}")
-<<<<<<< HEAD
-    csv_row = [ fitness, test_fitness, seed, benchmark_name, individual.genotype, phenotype, prods, depth, nodes ]
-    with open(f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/main.csv", "a", newline="") as outfile:
-=======
     csv_row = [
         fitness,
         test_fitness,
@@ -160,7 +152,6 @@ def run_experiments(
         "a",
         newline="",
     ) as outfile:
->>>>>>> virtualenv
         writer = csv.writer(outfile)
         writer.writerow(csv_row)
 
@@ -188,9 +179,7 @@ def single_run(
         fitness_function=ff,
         target_fitness=params["TARGET_FITNESS"],
     )
-    os.makedirs(
-        f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/", exist_ok=True
-    )
+    os.makedirs(f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/", exist_ok=True)
     mcb = MemoryCallback()
     gcb = GenerationCallback()
     start_time = time.time()
@@ -299,18 +288,12 @@ def make_synthetic_params(seed: int):
         "NUMBER_OF_ITERATIONS": 100,
         "MAX_INIT_DEPTH": round(random.normalvariate(5, 1.5)),  # vary
         "POPULATION_SIZE": pop_size,  # vary
-        "ELITSM": round(
-            min(max(random.normalvariate(5, 2), 0), pop_size / 10)
-        ),  # vary between 0 - 10%
+        "ELITSM": round(min(max(random.normalvariate(5, 2), 0), pop_size / 10)),  # vary between 0 - 10%
         "TARGET_FITNESS": 0,
         "PROBABILITY_CO": min(1, max(0, random.normalvariate(0.6, 0.3))),
         "PROBABILITY_MUT": min(1, max(0, random.normalvariate(0.6, 0.3))),
-        "NOVELTY": round(
-            min(max(random.normalvariate(5, 2), 0), pop_size / 10)
-        ),  # vary between 0 - 10%
-        "TOURNAMENT_SIZE": round(
-            min(max(random.normalvariate(3.5, 1), 2), 5)
-        ),  # vary between 0 - 10%,
+        "NOVELTY": round(min(max(random.normalvariate(5, 2), 0), pop_size / 10)),  # vary between 0 - 10%
+        "TOURNAMENT_SIZE": round(min(max(random.normalvariate(3.5, 1), 2), 5)),  # vary between 0 - 10%,
     }
 
 
@@ -325,19 +308,6 @@ def make_representations():
 
     tree_repr = treebased_representation
 
-<<<<<<< HEAD
-                individual, fitness, phenotype, prods = evolve(seed, False)
-                fitness = ff(phenotype)
-                depth = phenotype.gengy_distance_to_term
-                nodes = phenotype.gengy_nodes
-                print(phenotype)
-                print(f"With fitness: {fitness}")
-                csv_row = [ fitness, seed, benchmark_name, individual.genotype, phenotype, prods, ff_level, target_ind, max_depth, params["MAX_INIT_DEPTH"], params["POPULATION_SIZE"], params["ELITSM"], params["TARGET_FITNESS"], params["PROBABILITY_CO"], params["PROBABILITY_MUT"], params["NOVELTY"], params["TOURNAMENT_SIZE"], grammar_depth_min, grammar_depth_max, grammar_n_non_terminals, grammar_n_prods_occurrences, grammar_n_recursive_prods, depth, nodes ]
-                with open(f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/main.csv", "a", newline="") as outfile:
-                    writer = csv.writer(outfile)
-                    writer.writerow(csv_row)
-    
-=======
     return [("ge", ge_repr), ("dsge", dsge_repr), ("treebased", tree_repr)]
 
 
@@ -375,4 +345,3 @@ def run_synthetic_experiments(
         )
     except Exception:
         sys.stderr.write(traceback.format_exc())
->>>>>>> virtualenv
