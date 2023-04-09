@@ -176,7 +176,7 @@ params = {
     "MAX_INIT_DEPTH": 6,
     "MAX_DEPTH": 10,
     "POPULATION_SIZE": 20,
-    "ELITSM": 1,
+    "ELITISM": 1,
     "TARGET_FITNESS": None,
 }
 

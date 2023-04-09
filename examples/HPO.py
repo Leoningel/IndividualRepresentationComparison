@@ -8,13 +8,21 @@ from geneticengine.core.grammar import extract_grammar
 from geneticengine.metahandlers.floats import FloatList
 from geneticengine.metahandlers.ints import IntList, IntRange
 
-from examples.utils.wrapper import run_experiments
-
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 import warnings
+
+
+from examples.utils.wrapper import run_experiments
+
+
+def warn(*args, **kwargs):
+    pass
+
+
+warnings.warn = warn
 
 
 def warn(*args, **kwargs):
@@ -167,7 +175,7 @@ params = {
     "MAX_INIT_DEPTH": None,
     "MAX_DEPTH": 10,
     "POPULATION_SIZE": 20,
-    "ELITSM": 1,
+    "ELITISM": 1,
     "TARGET_FITNESS": 1,
 }
 

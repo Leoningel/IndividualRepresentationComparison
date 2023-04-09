@@ -90,7 +90,7 @@ params = {
     "MAX_INIT_DEPTH": 6,
     "MAX_DEPTH": 10,
     "POPULATION_SIZE": 50,
-    "ELITSM": 5,
+    "ELITISM": 5,
     "TARGET_FITNESS": None,
 }
 
