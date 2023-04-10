@@ -181,7 +181,6 @@ params = {
 }
 
 if __name__ == "__main__":
-    representations = ["ge", "dsge", "treebased"]
 
     parser = ArgumentParser()
     parser.add_argument("-s", "--seed", dest="seed", type=int, default=0)
@@ -195,5 +194,5 @@ if __name__ == "__main__":
         folder_name="santafe",
         seed=args.seed,
         params=params,
-        representation=representations[args.representation],
+        repr_code=args.representation,
     )

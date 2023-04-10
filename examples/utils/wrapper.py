@@ -36,6 +36,7 @@ from geneticengine.core.problems import SingleObjectiveProblem
 from geneticengine.algorithms.callbacks.callback import (
     Callback,
     TimeStoppingCriterium,
+    ProgressCallback,
 )
 
 import platform
@@ -249,3 +250,104 @@ def run_synthetic_experiments(
         )
     except Exception:
         sys.stderr.write(traceback.format_exc())
+
+
+def run_experiments(
+    grammar,
+    ff,
+    ff_test,
+    benchmark_name,
+    seed,
+    params,
+    repr_code: int,
+    timeout=60,
+):
+    """Runs an experiment run"""
+
+    representation = [
+        GrammaticalEvolutionRepresentation,
+        DynamicStructuredGrammaticalEvolutionRepresentation,
+        TreeBasedRepresentation,
+    ][repr_code]
+
+    representation_name = str(representation.__name__)
+    max_depth = params.get("MAX_DEPTH", 6)
+    population_size = params.get("POPULATION_SIZE", 20)
+    elitism = params.get("ELITISM", 1)
+    novelty = params.get("NOVELTY", 0)
+    tournament_size = params.get("TOURNAMENT_SIZE", 3)
+    probability_co = params.get("PROBABILITY_CO", 0.1)
+    probability_mut = params.get("PROBABILITY_MUT", 0.9)
+    minimize = params.get("MINIMIZE", False)
+    target_fitness = params.get("TARGET_FITNESS", None)
+
+    remaining = population_size - elitism - novelty
+
+    so_problem = SingleObjectiveProblem(minimize=minimize, fitness_function=ff)
+    os.makedirs(f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation_name}/", exist_ok=True)
+    mcb = MemoryCallback()
+
+    (
+        (grammar_depth_min, grammar_depth_max),
+        grammar_n_non_terminals,
+        (grammar_n_prods_occurrences, grammar_n_recursive_prods),
+    ) = grammar.get_grammar_properties_summary()
+
+    extra_columns = {
+        "GP Seed": lambda gen, pop, time, gp, ind: seed,
+        "Benchmark Name": lambda gen, pop, time, gp, ind: benchmark_name,
+        "Grammar": lambda gen, pop, time, gp, ind: grammar,
+        "Representation": lambda gen, pop, time, gp, ind: representation_name,
+        "Max Depth": lambda gen, pop, time, gp, ind: max_depth,
+        "Mem Peak": lambda gen, pop, time, gp, ind: mcb.mem_peak,
+        "Population Size": lambda gen, pop, time, gp, ind: population_size,
+        "Elitism": lambda gen, pop, time, gp, ind: elitism,
+        "Novelty": lambda gen, pop, time, gp, ind: novelty,
+        "Probability Crossover": lambda gen, pop, time, gp, ind: probability_co,
+        "Probability Mutation": lambda gen, pop, time, gp, ind: probability_mut,
+        "Tournament Size": lambda gen, pop, time, gp, ind: tournament_size,
+        "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,
+        "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,
+        "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,
+        "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
+        "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
+    }
+
+    if ff_test is not None:
+        extra_columns["Test Fitness"] = lambda gen, pop, time, gp, ind: ff_test(ind.get_phenotype())
+
+    csvcb = CSVCallback(
+        filename=f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation_name}/s{seed}.csv",
+        extra_columns=extra_columns,
+    )
+
+    step = ParallelStep(
+        [
+            ElitismStep(),
+            NoveltyStep(),
+            SequenceStep(
+                TournamentSelection(tournament_size),
+                GenericCrossoverStep(probability_co),
+                GenericMutationStep(probability_mut),
+            ),
+        ],
+        weights=[elitism, novelty, remaining],
+    )
+
+    stopping_criterium = TimeStoppingCriterium(timeout)
+    if target_fitness is not None:
+        stopping_criterium = AnyOfStoppingCriterium(
+            stopping_criterium, SingleFitnessTargetStoppingCriterium(target_fitness)
+        )
+
+    alg = GP(
+        representation=representation(grammar=grammar, max_depth=max_depth),
+        problem=so_problem,
+        random_source=RandomSource(seed),
+        population_size=population_size,
+        step=step,
+        stopping_criterium=stopping_criterium,
+        callbacks=[mcb, csvcb, ProgressCallback()],
+    )
+
+    alg.evolve()

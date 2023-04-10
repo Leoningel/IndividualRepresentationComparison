@@ -72,5 +72,5 @@ if __name__ == "__main__":
         benchmark_name=example,
         seed=args.seed,
         params=params,
-        representation=representations[args.representation],
+        repr_code=args.representation,
     )
