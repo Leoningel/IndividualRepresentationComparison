@@ -1,4 +1,4 @@
-git+https://github.com/alcides/GeneticEngine@131f6523be5377bf622d5d45340c9aee41f750d9#egg=GeneticEngine
+git+https://github.com/alcides/GeneticEngine@f4e90cce67076ba1b23cec089e132eaa17e2680f#egg=GeneticEngine
 pandas==1.5.1
 numpy==1.23.4
 seaborn==0.11.2
