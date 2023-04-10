@@ -1,12 +1,12 @@
-src/results
+results
 
 archive
 *.pdf
 !data_alcides/figures/generations/*
 !data_alcides/figures/time/*
 *.csv
-!src/examples/data/*
-!src/examples/data/GameOfLife/*
+!examples/data/*
+!examples/data/GameOfLife/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -14,7 +14,7 @@ __pycache__/
 
 # C extensions
 *.so
-*.vscode 
+*.vscode
 
 # Distribution / packaging
 .Python

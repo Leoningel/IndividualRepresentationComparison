@@ -8,6 +8,6 @@ if [[ "${TRACE-0}" == "1" ]]; then
 fi
 
 
-git pull 
+git pull
 pyenv local pypy3
 source venv/bin/activate

@@ -5,23 +5,8 @@ from argparse import ArgumentParser
 from dataclasses import dataclass
 from enum import Enum
 from typing import Annotated
-from typing import List
-from typing import Tuple
 
-from geneticengine.algorithms.gp.gp import GP
-from geneticengine.algorithms.hill_climbing import HC
 from geneticengine.core.grammar import extract_grammar
-from geneticengine.core.problems import SingleObjectiveProblem
-from geneticengine.core.representations.grammatical_evolution.dynamic_structured_ge import (
-    dsge_representation,
-)
-from geneticengine.core.representations.grammatical_evolution.ge import (
-    ge_representation,
-)
-from geneticengine.core.representations.grammatical_evolution.structured_ge import (
-    sge_representation,
-)
-from geneticengine.core.representations.tree.treebased import treebased_representation
 from geneticengine.metahandlers.lists import ListSizeBetween
 
 from examples.utils.wrapper import run_experiments
@@ -110,10 +95,7 @@ class Position(Enum):
 
 
 def map_from_string(map_str: str) -> list[list[Position]]:
-    return [
-        [pos == "#" and Position.FOOD or Position.EMPTY for pos in line]
-        for line in map_str.split("\n")
-    ]
+    return [[pos == "#" and Position.FOOD or Position.EMPTY for pos in line] for line in map_str.split("\n")]
 
 
 def next_pos(
@@ -181,26 +163,36 @@ def simulate(a: Action, map_str: str) -> int:
 
 grammar = extract_grammar([ActionBlock, Action, IfFood, Move, Right, Left], ActionMain)
 
-fitness_function = lambda p: simulate(p, map)
+
+def fitness_function(p):
+    return simulate(p, map)
+
 
 params = {
-    'MINIMIZE': False,
-    'NUMBER_OF_ITERATIONS': 100,
-    'MIN_INIT_DEPTH': 2,
-    'MIN_DEPTH': None,
-    'MAX_INIT_DEPTH': 6,
-    'MAX_DEPTH': 10,
-    'POPULATION_SIZE': 20,
-    'ELITSM': 1,
-    'TARGET_FITNESS': None,
+    "MINIMIZE": False,
+    "NUMBER_OF_ITERATIONS": 100,
+    "MIN_INIT_DEPTH": 2,
+    "MIN_DEPTH": None,
+    "MAX_INIT_DEPTH": 6,
+    "MAX_DEPTH": 10,
+    "POPULATION_SIZE": 20,
+    "ELITISM": 1,
+    "TARGET_FITNESS": None,
 }
 
 if __name__ == "__main__":
-    representations = [ 'ge', 'dsge', 'treebased' ]
-    
+
     parser = ArgumentParser()
     parser.add_argument("-s", "--seed", dest="seed", type=int, default=0)
     parser.add_argument("-r", "--representation", dest="representation", type=int, default=0)
     args = parser.parse_args()
 
-    run_experiments(grammar, ff=fitness_function, ff_test=None, folder_name="santafe", seed=args.seed, params=params, representation=representations[args.representation])
+    run_experiments(
+        grammar,
+        ff=fitness_function,
+        ff_test=None,
+        folder_name="santafe",
+        seed=args.seed,
+        params=params,
+        repr_code=args.representation,
+    )

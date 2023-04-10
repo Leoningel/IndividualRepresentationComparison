@@ -23,8 +23,6 @@ from keras.datasets.cifar import load_batch
 from keras.utils.data_utils import get_file
 
 # isort: off
-from tensorflow.python.util.tf_export import keras_export
-
 
 
 def load_data_alt():
@@ -82,9 +80,7 @@ def load_data_alt():
         dirname,
         origin=origin,
         untar=True,
-        file_hash=(  # noqa: E501
-            "6d958be074577803d12ecdefd02955f39262c83c16fe9348329d7fe0b5c001ce"
-        ),
+        file_hash=("6d958be074577803d12ecdefd02955f39262c83c16fe9348329d7fe0b5c001ce"),  # noqa: E501
     )
 
     num_train_samples = 50000

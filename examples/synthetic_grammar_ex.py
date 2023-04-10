@@ -9,14 +9,12 @@ else:
     from polyleven import levenshtein
 
 
-from geneticengine.algorithms.gp.individual import Individual
-from geneticengine.core.grammar import extract_grammar
+from geneticengine.core.grammar import extract_grammar, Grammar
 from geneticengine.core.random.sources import RandomSource
-from geneticengine.core.representations.tree.treebased import treebased_representation
-from geneticengine.core.representations.tree.initialization_methods import (
-    Random_Production,
-)
+from geneticengine.core.representations.tree.treebased import TreeBasedRepresentation
+from geneticengine.core.representations.tree.initializations import full_method
 from geneticengine.grammars.synthetic_grammar import create_arbitrary_grammar
+from geneticengine.analysis.production_analysis import count_productions
 
 
 def generate_synthetic_grammar(
@@ -55,18 +53,15 @@ def validate_grammar(grammar) -> bool:
 def generate_target_individual(seed: int, grammar, target_depth: int = 10):
     """Generates an arbitratry individual that uses a grammar."""
     r = RandomSource(seed)
-    representation = treebased_representation
-    representation.method = Random_Production(min_depth=target_depth)
+    representation = TreeBasedRepresentation(grammar, target_depth)
     target_individual = representation.create_individual(
-        r=r, g=grammar, depth=target_depth
+        r=r, g=grammar, depth=target_depth, initialization_method=full_method
     )
-    individual_phenotype = representation.genotype_to_phenotype(
-        grammar, target_individual
-    )
+    individual_phenotype = representation.genotype_to_phenotype(target_individual)
     return individual_phenotype
 
 
-def generate_fitness_functions(grammar, target_individual):
+def generate_fitness_functions(grammar: Grammar, target_individual):
     """Generates three fitness_functions for a particular individual"""
 
     target_str = str(target_individual)
@@ -79,14 +74,10 @@ def generate_fitness_functions(grammar, target_individual):
         y = str(target_individual)
         return sum(0 if a != b else 1 for a, b in zip(x, y)) + abs(len(x) - len(y))
 
-    ind = Individual(target_individual)
-    ti_prods = ind.count_prods(treebased_representation.genotype_to_phenotype, grammar)
+    ti_prods = count_productions(target_individual, grammar)
 
     def ff_medium(n):
-        n_ind = Individual(n)
-        prods = n_ind.count_prods(
-            treebased_representation.genotype_to_phenotype, grammar
-        )
+        prods = count_productions(n, grammar)
         prod_differences = 0
         for prod in prods.keys():
             prod_differences += abs(ti_prods[prod] - prods[prod])
@@ -95,10 +86,7 @@ def generate_fitness_functions(grammar, target_individual):
     random_key = random.choice([key for key in ti_prods.keys()])
 
     def ff_easy(n):
-        n_ind = Individual(n)
-        prods = n_ind.count_prods(
-            treebased_representation.genotype_to_phenotype, grammar
-        )
+        prods = count_productions(n, grammar)
         return abs(ti_prods[random_key] - prods[random_key])
 
     return [("easy", ff_easy), ("medium", ff_medium), ("hard", ff_hard)]
@@ -119,10 +107,7 @@ def generate_problem(seed: int, target_depth: int):
             average_productions_per_terminal=average_productions_per_terminal,
             non_terminals_per_production=non_terminals_per_production,
         )
-        if (
-            not validate_grammar(grammar)
-            or grammar.get_min_tree_depth() >= target_depth
-        ):
+        if not validate_grammar(grammar) or grammar.get_min_tree_depth() >= target_depth:
             seedx += 10000
             print(f"Fail {seedx}")
             continue
