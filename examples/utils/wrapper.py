@@ -260,7 +260,7 @@ def run_experiments(
     seed,
     params,
     repr_code: int,
-    timeout=60,
+    timeout=5 * 60,
 ):
     """Runs an experiment run"""
 
@@ -294,6 +294,7 @@ def run_experiments(
     ) = grammar.get_grammar_properties_summary()
 
     extra_columns = {
+        "Phenotype": lambda gen, pop, time, gp, ind: str(ind.get_phenotype()),
         "GP Seed": lambda gen, pop, time, gp, ind: seed,
         "Benchmark Name": lambda gen, pop, time, gp, ind: benchmark_name,
         "Grammar": lambda gen, pop, time, gp, ind: grammar,

@@ -15,7 +15,7 @@ if __name__ == "__main__":
     base_seed = args.seed
     random.seed(base_seed)
 
-    target_depth = [8, 10, 12][args.depth]
+    target_depth = [8, 10, 12, 14, 16][args.depth]
 
     (
         seed,
