@@ -9,11 +9,11 @@
 #SBATCH --output=logs/synthetic_%j.log   # Standard output and error log
 
 
-#SBATCH --array=0-999                   # iterate values between 0 and 59, inclusive
+#SBATCH --array=0-2999                   # iterate values between 0 and 59, inclusive
 
 
 cd ..
 pyenv local 3.11.1
 source venv/bin/activate
 cd src
-python run_synthetic_example.py --seed $SLURM_ARRAY_TASK_ID $@
+python run_synthetic_example.py --seed $(expr $SLURM_ARRAY_TASK_ID / 3) -r $(expr $SLURM_ARRAY_TASK_ID % 30) $@
