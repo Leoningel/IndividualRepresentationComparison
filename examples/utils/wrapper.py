@@ -230,6 +230,7 @@ def run_synthetic_experiments(
     average_productions_per_terminal: int,
     non_terminals_per_production: int,
 ):
+    print("benchmark_name", benchmark_name)
     params = make_synthetic_params(seed)
     representation_name, repr = make_representations()[representation_index]
     ff_level, ff, target_individual = fitness_function
