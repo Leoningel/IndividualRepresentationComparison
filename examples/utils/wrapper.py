@@ -131,10 +131,6 @@ def single_run(
             "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,  #
             "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,  #
             "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production,  #
-            # Target Individual Information
-            "Target Individual": lambda gen, pop, time, gp, ind: str(target_individual),  #
-            "Target Individual Nodes": lambda gen, pop, time, gp, ind: target_individual.gengy_nodes,  #
-            "Target Individual Depth": lambda gen, pop, time, gp, ind: target_individual.gengy_distance_to_term,  #
         },
     )
 
@@ -256,8 +252,10 @@ def run_synthetic_experiments(
             non_terminals_per_production=non_terminals_per_production,
             target_individual=target_individual,
         )
+        print("done")
     except Exception:
         sys.stderr.write(traceback.format_exc())
+        print("done with errors")
 
 
 def run_experiments(

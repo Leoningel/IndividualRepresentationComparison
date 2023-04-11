@@ -14,4 +14,4 @@
 
 pyenv local 3.11.1
 source .venv/bin/activate
-python run_synthetic_example.py --seed $(expr $SLURM_ARRAY_TASK_ID / 3) -r $(expr $SLURM_ARRAY_TASK_ID % 30) $@
+python run_synthetic_example.py --seed $(expr $SLURM_ARRAY_TASK_ID / 3) -r $(expr $SLURM_ARRAY_TASK_ID % 3) $@
