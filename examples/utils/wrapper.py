@@ -148,7 +148,6 @@ def single_run(
         ],
         weights=[params["ELITISM"], params["NOVELTY"], remaining],
     )
-
     alg = GP(
         representation=repr(grammar=grammar, max_depth=max_depth),
         problem=so_problem,
@@ -159,7 +158,7 @@ def single_run(
             SingleFitnessTargetStoppingCriterium(params["TARGET_FITNESS"]),  # TODO
             TimeStoppingCriterium(timeout),
         ),
-        callbacks=[mcb, csvcb],
+        callbacks=[mcb, csvcb, ProgressCallback()],
     )
     ind = alg.evolve()
 
@@ -230,10 +229,22 @@ def run_synthetic_experiments(
     average_productions_per_terminal: int,
     non_terminals_per_production: int,
 ):
-    print("benchmark_name", benchmark_name)
     params = make_synthetic_params(seed)
     representation_name, repr = make_representations()[representation_index]
     ff_level, ff, target_individual = fitness_function
+
+    print("benchmark_name", benchmark_name)
+    print("Base seed:", base_seed)
+    print("Timeout:", timeout)
+    print("Seed:", seed)
+    print("Grammar:", grammar)
+    print("Representation:", representation_name)
+    print("Fitness difficulty:", ff_level)
+    print("Target individual:", target_individual)
+    print("Target individual nodes:", target_individual.gengy_nodes)
+    print("Target individual depth:", target_individual.gengy_distance_to_term)
+    print("Target depth:", target_depth)
+
     try:
         single_run(
             base_seed,
