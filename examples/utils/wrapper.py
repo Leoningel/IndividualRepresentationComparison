@@ -119,15 +119,17 @@ def single_run(
             "Probability Crossover": lambda gen, pop, time, gp, ind: params["PROBABILITY_CO"],
             "Probability Mutation": lambda gen, pop, time, gp, ind: params["PROBABILITY_MUT"],
             "Tournament Size": lambda gen, pop, time, gp, ind: params["TOURNAMENT_SIZE"],
-            "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,
-            "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,
-            "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,
-            "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
-            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
-            "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,
-            "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,
-            "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,
-            "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production,
+            # -- Grammar ------------------
+            "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min, # Smallest possible individual's depth
+            "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max, # Biggest possible individual's depth (max 10000)
+            "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals, # Number of different non terminals (unique elements without children)
+            "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences, # Dictionary with: { symbol: number of times it occurs on the RHS }
+            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences, # Number of recursive productions
+            # -- Grammar Creation Variables ------------------
+            "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count, # 
+            "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count, #
+            "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal, #
+            "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production, #
         },
     )
 
