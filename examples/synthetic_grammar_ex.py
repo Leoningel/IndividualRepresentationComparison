@@ -89,7 +89,11 @@ def generate_fitness_functions(grammar: Grammar, target_individual):
         prods = count_productions(n, grammar)
         return abs(ti_prods[random_key] - prods[random_key])
 
-    return [("easy", ff_easy), ("medium", ff_medium), ("hard", ff_hard)]
+    return [
+        ("easy", ff_easy, target_individual),
+        ("medium", ff_medium, target_individual),
+        ("hard", ff_hard, target_individual),
+    ]
 
 
 def generate_problem(seed: int, target_depth: int):

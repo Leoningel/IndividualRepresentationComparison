@@ -86,6 +86,7 @@ def single_run(
     recursive_non_terminals_count: int,
     average_productions_per_terminal: int,
     non_terminals_per_production: int,
+    target_individual: Any,
 ):
     print("Single run", benchmark_name, seed, representation, ff_level, max_depth)
 
@@ -120,16 +121,20 @@ def single_run(
             "Probability Mutation": lambda gen, pop, time, gp, ind: params["PROBABILITY_MUT"],
             "Tournament Size": lambda gen, pop, time, gp, ind: params["TOURNAMENT_SIZE"],
             # -- Grammar ------------------
-            "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min, # Smallest possible individual's depth
-            "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max, # Biggest possible individual's depth (max 10000)
-            "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals, # Number of different non terminals (unique elements without children)
-            "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences, # Dictionary with: { symbol: number of times it occurs on the RHS }
-            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences, # Number of recursive productions
+            "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,  # Smallest possible individual's depth
+            "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,  # Biggest possible individual's depth (max 10000)
+            "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,  # Number of different non terminals (unique elements without children)
+            "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,  # Dictionary with: { symbol: number of times it occurs on the RHS }
+            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,  # Number of recursive productions
             # -- Grammar Creation Variables ------------------
-            "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count, # 
-            "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count, #
-            "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal, #
-            "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production, #
+            "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,  #
+            "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,  #
+            "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,  #
+            "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production,  #
+            # Target Individual Information
+            "Target Individual": lambda gen, pop, time, gp, ind: str(target_individual),  #
+            "Target Individual Nodes": lambda gen, pop, time, gp, ind: target_individual.gengy_nodes,  #
+            "Target Individual Depth": lambda gen, pop, time, gp, ind: target_individual.gengy_distance_to_term,  #
         },
     )
 
@@ -223,7 +228,7 @@ def run_synthetic_experiments(
     representation_index: int,
     target_individual,
     target_depth: int,
-    fitness_function: tuple[str, Any],
+    fitness_function: tuple[str, Any, Any],
     non_terminals_count: int,
     recursive_non_terminals_count: int,
     average_productions_per_terminal: int,
@@ -231,7 +236,7 @@ def run_synthetic_experiments(
 ):
     params = make_synthetic_params(seed)
     representation_name, repr = make_representations()[representation_index]
-    ff_level, ff = fitness_function
+    ff_level, ff, target_individual = fitness_function
     try:
         single_run(
             base_seed,
@@ -249,6 +254,7 @@ def run_synthetic_experiments(
             recursive_non_terminals_count=recursive_non_terminals_count,
             average_productions_per_terminal=average_productions_per_terminal,
             non_terminals_per_production=non_terminals_per_production,
+            target_individual=target_individual,
         )
     except Exception:
         sys.stderr.write(traceback.format_exc())
