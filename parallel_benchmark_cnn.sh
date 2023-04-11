@@ -10,6 +10,6 @@
 #SBATCH --array=0-89%5                  # iterate values between 0 and 59, inclusive
 
 pyenv local 3.11.1
-source ../venv/bin/activate
+source .venv/bin/activate
 
 python run_example.py -s $(expr $SLURM_ARRAY_TASK_ID % 30) -r $(expr $SLURM_ARRAY_TASK_ID / 30) -e cnn
