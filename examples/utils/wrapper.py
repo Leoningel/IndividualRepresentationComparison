@@ -106,13 +106,13 @@ def single_run(
     csvcb = CSVCallback(
         filename=f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/{ff_level}_d{max_depth}_s{seed}.csv",
         extra_columns={
+            "Benchmark Name": lambda gen, pop, time, gp, ind: benchmark_name,
+            "Representation": lambda gen, pop, time, gp, ind: str(repr.__name__),
+            "Fitness Difficulty": lambda gen, pop, time, gp, ind: ff_level,
+            "Max Depth": lambda gen, pop, time, gp, ind: max_depth,
             "Grammar Seed": lambda gen, pop, time, gp, ind: base_seed,
             "GP Seed": lambda gen, pop, time, gp, ind: seed,
-            "Benchmark Name": lambda gen, pop, time, gp, ind: benchmark_name,
             "Grammar": lambda gen, pop, time, gp, ind: grammar,
-            "Fitness Difficulty": lambda gen, pop, time, gp, ind: ff_level,
-            "Representation": lambda gen, pop, time, gp, ind: str(repr.__name__),
-            "Max Depth": lambda gen, pop, time, gp, ind: max_depth,
             "Mem Peak": lambda gen, pop, time, gp, ind: mcb.mem_peak,
             "Population Size": lambda gen, pop, time, gp, ind: params["POPULATION_SIZE"],
             "Elitism": lambda gen, pop, time, gp, ind: params["ELITISM"],
@@ -301,11 +301,11 @@ def run_experiments(
     ) = grammar.get_grammar_properties_summary()
 
     extra_columns = {
+        "Benchmark Name": lambda gen, pop, time, gp, ind: benchmark_name,
+        "Representation": lambda gen, pop, time, gp, ind: representation_name,
         "Phenotype": lambda gen, pop, time, gp, ind: str(ind.get_phenotype()),
         "GP Seed": lambda gen, pop, time, gp, ind: seed,
-        "Benchmark Name": lambda gen, pop, time, gp, ind: benchmark_name,
         "Grammar": lambda gen, pop, time, gp, ind: grammar,
-        "Representation": lambda gen, pop, time, gp, ind: representation_name,
         "Max Depth": lambda gen, pop, time, gp, ind: max_depth,
         "Mem Peak": lambda gen, pop, time, gp, ind: mcb.mem_peak,
         "Population Size": lambda gen, pop, time, gp, ind: population_size,
