@@ -60,6 +60,15 @@ def generate_target_individual(seed: int, grammar, target_depth: int = 10):
     individual_phenotype = representation.genotype_to_phenotype(target_individual)
     return individual_phenotype
 
+def generate_list_of_target_individuals(seed: int, grammar, target_depth: int = 10, number_of_target_individuals: int = 10):
+    """Generates an arbitratry individual that uses a grammar."""
+    r = RandomSource(seed)
+    individuals_phenotype = list()
+    for _ in range(number_of_target_individuals):
+        rand_int = r.randint(1,10000)
+        individuals_phenotype.append(generate_target_individual(rand_int, grammar, target_depth), rand_int)
+    return individuals_phenotype
+
 
 def generate_fitness_functions(grammar: Grammar, target_individual):
     """Generates three fitness_functions for a particular individual"""
@@ -96,8 +105,9 @@ def generate_fitness_functions(grammar: Grammar, target_individual):
     ]
 
 
-def generate_problem(seed: int, target_depth: int):
+def generate_problem(seed: int, target_depth: int, number_of_target_individuals: int = 1):
     """Generates a valid grammar, target_individual and fitness_functions."""
+    assert number_of_target_individuals > 0
     seedx = seed
     for _ in range(30):
         non_terminals_count = random.randint(3, 20)
@@ -116,12 +126,12 @@ def generate_problem(seed: int, target_depth: int):
             print(f"Fail {seedx}")
             continue
         else:
-            target_ind = generate_target_individual(seedx, grammar, target_depth)
-            fitness_functions = generate_fitness_functions(grammar, target_ind)
+            target_inds = generate_list_of_target_individuals(seedx, grammar, target_depth, number_of_target_individuals)
+            fitness_functions = [ generate_fitness_functions(grammar, target_ind) for target_ind,_ in target_inds ]
             return (
                 seedx,
                 grammar,
-                target_ind,
+                target_inds,
                 target_depth,
                 fitness_functions,
                 non_terminals_count,

@@ -74,6 +74,7 @@ def single_run(
     base_seed,
     timeout,
     seed,
+    target_ind_seed,
     params,
     grammar: Grammar,
     benchmark_name,
@@ -110,6 +111,7 @@ def single_run(
             "Representation": lambda gen, pop, time, gp, ind: str(repr.__name__),
             "Fitness Difficulty": lambda gen, pop, time, gp, ind: ff_level,
             "Max Depth": lambda gen, pop, time, gp, ind: max_depth,
+            "Target Individual Seed": lambda gen, pop, time, gp, ind: target_ind_seed,
             "Grammar Seed": lambda gen, pop, time, gp, ind: base_seed,
             "GP Seed": lambda gen, pop, time, gp, ind: seed,
             "Grammar": lambda gen, pop, time, gp, ind: grammar,
@@ -131,7 +133,10 @@ def single_run(
             "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,  #
             "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,  #
             "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production,  #
-            "Target Individual": lambda gen, pop, time, gp, ind: str(target_individual),  #
+            # -- Target Individual ------------------
+            # "Target Individual": lambda gen, pop, time, gp, ind: str(target_individual),  # Complete target individual
+            # "Target Individual nodes": lambda gen, pop, time, gp, ind: target_individual.gengy_nodes,  # Number of nodes of target individual
+            # "Target Individual depth": lambda gen, pop, time, gp, ind: target_individual.gengy_distance_to_term,  # Depth of target individual
         },
     )
 
@@ -234,7 +239,7 @@ def run_synthetic_experiments(
     print("benchmark_name", benchmark_name)
     params = make_synthetic_params(seed)
     representation_name, repr = make_representations()[representation_index]
-    ff_level, ff, target_individual = fitness_function
+    ff_level, ff, target_individual[0] = fitness_function
     try:
         single_run(
             base_seed,
