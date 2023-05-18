@@ -20,7 +20,7 @@ if __name__ == "__main__":
     (
         seed,
         grammar,
-        target_individual,
+        target_individuals,
         target_depth,
         fitness_functions,
         non_terminals_count,
@@ -29,18 +29,20 @@ if __name__ == "__main__":
         non_terminals_per_production,
     ) = generate_problem(base_seed, target_depth)
 
-    run_synthetic_experiments(
-        benchmark_name=f"synthetic_{seed}_{target_depth}_{fitness_functions[args.fitness][0]}",
-        base_seed=base_seed,
-        timeout=args.timeout,
-        seed=seed,
-        grammar=grammar,
-        representation_index=args.representation,
-        target_individual=target_individual,
-        target_depth=target_depth,
-        fitness_function=fitness_functions[args.fitness],
-        non_terminals_count=non_terminals_count,
-        recursive_non_terminals_count=recursive_non_terminals_count,
-        average_productions_per_terminal=average_productions_per_terminal,
-        non_terminals_per_production=non_terminals_per_production,
-    )
+    for idx, target_individual in enumerate(target_individuals):
+        run_synthetic_experiments(
+            benchmark_name=f"synthetic_{seed}_{target_depth}_{fitness_functions[args.fitness][0]}_target_ind{idx}",
+            base_seed=base_seed,
+            timeout=args.timeout,
+            seed=seed,
+            target_ind_seed=target_individual[1],
+            grammar=grammar,
+            representation_index=args.representation,
+            target_individual=target_individual[0],
+            target_depth=target_depth,
+            fitness_function=fitness_functions[idx][args.fitness],
+            non_terminals_count=non_terminals_count,
+            recursive_non_terminals_count=recursive_non_terminals_count,
+            average_productions_per_terminal=average_productions_per_terminal,
+            non_terminals_per_production=non_terminals_per_production,
+        )
