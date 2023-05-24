@@ -36,7 +36,6 @@ from geneticengine.core.problems import SingleObjectiveProblem
 from geneticengine.algorithms.callbacks.callback import (
     Callback,
     TimeStoppingCriterium,
-    ProgressCallback,
 )
 
 import platform
@@ -86,7 +85,6 @@ def single_run(
     recursive_non_terminals_count: int,
     average_productions_per_terminal: int,
     non_terminals_per_production: int,
-    target_individual: Any,
 ):
     print("Single run", benchmark_name, seed, representation, ff_level, max_depth)
 
@@ -100,7 +98,9 @@ def single_run(
         minimize=params["MINIMIZE"],
         fitness_function=ff,
     )
-    os.makedirs(f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/", exist_ok=True)
+    os.makedirs(
+        f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation}/", exist_ok=True
+    )
     mcb = MemoryCallback()
 
     csvcb = CSVCallback(
@@ -114,27 +114,29 @@ def single_run(
             "Representation": lambda gen, pop, time, gp, ind: str(repr.__name__),
             "Max Depth": lambda gen, pop, time, gp, ind: max_depth,
             "Mem Peak": lambda gen, pop, time, gp, ind: mcb.mem_peak,
-            "Population Size": lambda gen, pop, time, gp, ind: params["POPULATION_SIZE"],
+            "Population Size": lambda gen, pop, time, gp, ind: params[
+                "POPULATION_SIZE"
+            ],
             "Elitism": lambda gen, pop, time, gp, ind: params["ELITISM"],
             "Novelty": lambda gen, pop, time, gp, ind: params["NOVELTY"],
-            "Probability Crossover": lambda gen, pop, time, gp, ind: params["PROBABILITY_CO"],
-            "Probability Mutation": lambda gen, pop, time, gp, ind: params["PROBABILITY_MUT"],
-            "Tournament Size": lambda gen, pop, time, gp, ind: params["TOURNAMENT_SIZE"],
-            # -- Grammar ------------------
-            "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,  # Smallest possible individual's depth
-            "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,  # Biggest possible individual's depth (max 10000)
-            "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,  # Number of different non terminals (unique elements without children)
-            "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,  # Dictionary with: { symbol: number of times it occurs on the RHS }
-            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,  # Number of recursive productions
-            # -- Grammar Creation Variables ------------------
-            "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,  #
-            "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,  #
-            "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,  #
-            "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production,  #
-            # Target Individual Information
-            "Target Individual": lambda gen, pop, time, gp, ind: str(target_individual),  #
-            "Target Individual Nodes": lambda gen, pop, time, gp, ind: target_individual.gengy_nodes,  #
-            "Target Individual Depth": lambda gen, pop, time, gp, ind: target_individual.gengy_distance_to_term,  #
+            "Probability Crossover": lambda gen, pop, time, gp, ind: params[
+                "PROBABILITY_CO"
+            ],
+            "Probability Mutation": lambda gen, pop, time, gp, ind: params[
+                "PROBABILITY_MUT"
+            ],
+            "Tournament Size": lambda gen, pop, time, gp, ind: params[
+                "TOURNAMENT_SIZE"
+            ],
+            "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,
+            "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,
+            "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,
+            "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
+            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
+            "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,
+            "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,
+            "Requested Average Productions per Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,
+            "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production,
         },
     )
 
@@ -200,12 +202,18 @@ def make_synthetic_params(seed: int):
         "NUMBER_OF_ITERATIONS": 100,
         "MAX_INIT_DEPTH": round(random.normalvariate(5, 1.5)),  # vary
         "POPULATION_SIZE": pop_size,  # vary
-        "ELITISM": round(min(max(random.normalvariate(5, 2), 0), pop_size / 10)),  # vary between 0 - 10%
+        "ELITISM": round(
+            min(max(random.normalvariate(5, 2), 0), pop_size / 10)
+        ),  # vary between 0 - 10%
         "TARGET_FITNESS": 0,
         "PROBABILITY_CO": min(1, max(0, random.normalvariate(0.6, 0.3))),
         "PROBABILITY_MUT": min(1, max(0, random.normalvariate(0.6, 0.3))),
-        "NOVELTY": round(min(max(random.normalvariate(5, 2), 0), pop_size / 10)),  # vary between 0 - 10%
-        "TOURNAMENT_SIZE": round(min(max(random.normalvariate(3.5, 1), 2), 5)),  # vary between 0 - 10%,
+        "NOVELTY": round(
+            min(max(random.normalvariate(5, 2), 0), pop_size / 10)
+        ),  # vary between 0 - 10%
+        "TOURNAMENT_SIZE": round(
+            min(max(random.normalvariate(3.5, 1), 2), 5)
+        ),  # vary between 0 - 10%,
     }
 
 
@@ -228,7 +236,7 @@ def run_synthetic_experiments(
     representation_index: int,
     target_individual,
     target_depth: int,
-    fitness_function: tuple[str, Any, Any],
+    fitness_function: tuple[str, Any],
     non_terminals_count: int,
     recursive_non_terminals_count: int,
     average_productions_per_terminal: int,
@@ -236,7 +244,7 @@ def run_synthetic_experiments(
 ):
     params = make_synthetic_params(seed)
     representation_name, repr = make_representations()[representation_index]
-    ff_level, ff, target_individual = fitness_function
+    ff_level, ff = fitness_function
     try:
         single_run(
             base_seed,
@@ -254,109 +262,6 @@ def run_synthetic_experiments(
             recursive_non_terminals_count=recursive_non_terminals_count,
             average_productions_per_terminal=average_productions_per_terminal,
             non_terminals_per_production=non_terminals_per_production,
-            target_individual=target_individual,
         )
     except Exception:
         sys.stderr.write(traceback.format_exc())
-
-
-def run_experiments(
-    grammar,
-    ff,
-    ff_test,
-    benchmark_name,
-    seed,
-    params,
-    repr_code: int,
-    timeout=5 * 60,
-):
-    """Runs an experiment run"""
-
-    representation = [
-        GrammaticalEvolutionRepresentation,
-        DynamicStructuredGrammaticalEvolutionRepresentation,
-        TreeBasedRepresentation,
-    ][repr_code]
-
-    representation_name = str(representation.__name__)
-    max_depth = params.get("MAX_DEPTH", 6)
-    population_size = params.get("POPULATION_SIZE", 20)
-    elitism = params.get("ELITISM", 1)
-    novelty = params.get("NOVELTY", 0)
-    tournament_size = params.get("TOURNAMENT_SIZE", 3)
-    probability_co = params.get("PROBABILITY_CO", 0.1)
-    probability_mut = params.get("PROBABILITY_MUT", 0.9)
-    minimize = params.get("MINIMIZE", False)
-    target_fitness = params.get("TARGET_FITNESS", None)
-
-    remaining = population_size - elitism - novelty
-
-    so_problem = SingleObjectiveProblem(minimize=minimize, fitness_function=ff)
-    os.makedirs(f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation_name}/", exist_ok=True)
-    mcb = MemoryCallback()
-
-    (
-        (grammar_depth_min, grammar_depth_max),
-        grammar_n_non_terminals,
-        (grammar_n_prods_occurrences, grammar_n_recursive_prods),
-    ) = grammar.get_grammar_properties_summary()
-
-    extra_columns = {
-        "Phenotype": lambda gen, pop, time, gp, ind: str(ind.get_phenotype()),
-        "GP Seed": lambda gen, pop, time, gp, ind: seed,
-        "Benchmark Name": lambda gen, pop, time, gp, ind: benchmark_name,
-        "Grammar": lambda gen, pop, time, gp, ind: grammar,
-        "Representation": lambda gen, pop, time, gp, ind: representation_name,
-        "Max Depth": lambda gen, pop, time, gp, ind: max_depth,
-        "Mem Peak": lambda gen, pop, time, gp, ind: mcb.mem_peak,
-        "Population Size": lambda gen, pop, time, gp, ind: population_size,
-        "Elitism": lambda gen, pop, time, gp, ind: elitism,
-        "Novelty": lambda gen, pop, time, gp, ind: novelty,
-        "Probability Crossover": lambda gen, pop, time, gp, ind: probability_co,
-        "Probability Mutation": lambda gen, pop, time, gp, ind: probability_mut,
-        "Tournament Size": lambda gen, pop, time, gp, ind: tournament_size,
-        "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,
-        "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,
-        "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,
-        "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
-        "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
-    }
-
-    if ff_test is not None:
-        extra_columns["Test Fitness"] = lambda gen, pop, time, gp, ind: ff_test(ind.get_phenotype())
-
-    csvcb = CSVCallback(
-        filename=f"{gv.RESULTS_FOLDER}/{benchmark_name}/{representation_name}/s{seed}.csv",
-        extra_columns=extra_columns,
-    )
-
-    step = ParallelStep(
-        [
-            ElitismStep(),
-            NoveltyStep(),
-            SequenceStep(
-                TournamentSelection(tournament_size),
-                GenericCrossoverStep(probability_co),
-                GenericMutationStep(probability_mut),
-            ),
-        ],
-        weights=[elitism, novelty, remaining],
-    )
-
-    stopping_criterium = TimeStoppingCriterium(timeout)
-    if target_fitness is not None:
-        stopping_criterium = AnyOfStoppingCriterium(
-            stopping_criterium, SingleFitnessTargetStoppingCriterium(target_fitness)
-        )
-
-    alg = GP(
-        representation=representation(grammar=grammar, max_depth=max_depth),
-        problem=so_problem,
-        random_source=RandomSource(seed),
-        population_size=population_size,
-        step=step,
-        stopping_criterium=stopping_criterium,
-        callbacks=[mcb, csvcb, ProgressCallback()],
-    )
-
-    alg.evolve()
