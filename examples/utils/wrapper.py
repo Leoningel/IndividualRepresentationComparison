@@ -93,7 +93,7 @@ def single_run(
     (
         (grammar_depth_min, grammar_depth_max),
         grammar_n_non_terminals,
-        (grammar_n_prods_occurrences, grammar_n_recursive_prods),
+        (grammar_n_prods_occurrences, grammar_n_recursive_prods, grammar_alternatives, grammar_total_productions, grammar_average_productions_per_terminal),
     ) = grammar.get_grammar_properties_summary()
 
     so_problem = SingleObjectiveProblem(
@@ -126,6 +126,9 @@ def single_run(
             "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,  # Number of different non terminals (unique elements without children)
             "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,  # Dictionary with: { symbol: number of times it occurs on the RHS }
             "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_recursive_prods,  # Number of recursive productions
+            "Grammar Productions Per Non Terminal": lambda gen, pop, time, gp, ind: grammar_alternatives,  # The alternatives/productions possible for each non-terminal.
+            "Grammar Total Number of Productions": lambda gen, pop, time, gp, ind: grammar_total_productions,  # The total number of productions in the grammar.
+            "Grammar Average Number of Productions": lambda gen, pop, time, gp, ind: grammar_average_productions_per_terminal,  # The average number of productions for each non-terminal.
             # -- Grammar Creation Variables ------------------
             "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,  #
             "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,  #
@@ -298,7 +301,7 @@ def run_experiments(
     (
         (grammar_depth_min, grammar_depth_max),
         grammar_n_non_terminals,
-        (grammar_n_prods_occurrences, grammar_n_recursive_prods),
+        (grammar_n_prods_occurrences, grammar_n_recursive_prods, grammar_alternatives, grammar_total_productions, grammar_average_productions_per_terminal),
     ) = grammar.get_grammar_properties_summary()
 
     extra_columns = {
@@ -315,11 +318,15 @@ def run_experiments(
         "Probability Crossover": lambda gen, pop, time, gp, ind: probability_co,
         "Probability Mutation": lambda gen, pop, time, gp, ind: probability_mut,
         "Tournament Size": lambda gen, pop, time, gp, ind: tournament_size,
-        "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,
-        "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,
-        "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,
-        "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
-        "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_recursive_prods,
+        # -- Grammar ------------------
+        "Grammar Depth Min": lambda gen, pop, time, gp, ind: grammar_depth_min,  # Smallest possible individual's depth
+        "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,  # Biggest possible individual's depth (max 10000)
+        "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,  # Number of different non terminals (unique elements without children)
+        "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,  # Dictionary with: { symbol: number of times it occurs on the RHS }
+        "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_recursive_prods,  # Number of recursive productions
+        "Grammar Productions Per Non Terminal": lambda gen, pop, time, gp, ind: grammar_alternatives,  # The alternatives/productions possible for each non-terminal.
+        "Grammar Total Number of Productions": lambda gen, pop, time, gp, ind: grammar_total_productions,  # The total number of productions in the grammar.
+        "Grammar Average Number of Productions": lambda gen, pop, time, gp, ind: grammar_average_productions_per_terminal,  # The average number of productions for each non-terminal.
     }
 
     if ff_test is not None:
