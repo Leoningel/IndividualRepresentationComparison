@@ -125,7 +125,7 @@ def single_run(
             "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,  # Biggest possible individual's depth (max 10000)
             "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,  # Number of different non terminals (unique elements without children)
             "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,  # Dictionary with: { symbol: number of times it occurs on the RHS }
-            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,  # Number of recursive productions
+            "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_recursive_prods,  # Number of recursive productions
             # -- Grammar Creation Variables ------------------
             "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,  #
             "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,  #
@@ -319,7 +319,7 @@ def run_experiments(
         "Grammar Depth Max": lambda gen, pop, time, gp, ind: grammar_depth_max,
         "Grammar Non Terminals": lambda gen, pop, time, gp, ind: grammar_n_non_terminals,
         "Grammar Productions Ocurrences Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
-        "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_prods_occurrences,
+        "Grammar Recursive Productions Count": lambda gen, pop, time, gp, ind: grammar_n_recursive_prods,
     }
 
     if ff_test is not None:
