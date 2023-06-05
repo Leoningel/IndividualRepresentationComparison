@@ -12,3 +12,5 @@ tensorflow-macos==2.9.0; sys_platform == 'darwin' and platform_machine == 'arm64
 tensorflow-metal==0.5; sys_platform == 'darwin' and platform_machine == 'arm64'
 polyleven==0.8; platform_python_implementation=="CPython"
 pylev==0.8; platform_python_implementation=="PyPy"
+pyarrow
+fastparquet
