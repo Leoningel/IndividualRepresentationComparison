@@ -43,7 +43,7 @@ def import_dataframe(number_of_parts : int, part : int):
 
 
 def main():
-    number_of_parts = 2
+    number_of_parts = 10
     file_locations = list()
 
     for part in range(number_of_parts):
@@ -55,6 +55,7 @@ def main():
     print("Merging parquet files:", file_locations)
     with pq.ParquetWriter("synthetic_evolution.parquet", schema=pq.ParquetFile(file_locations[0]).schema_arrow) as writer:
         for file in file_locations:
+            print("Merging: ", file)
             writer.write_table(pq.read_table(file))
 
 
