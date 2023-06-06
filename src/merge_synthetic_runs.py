@@ -1,7 +1,8 @@
 import pathlib
 import pandas as pd
+import pyarrow.parquet as pq
 
-container = pathlib.Path("src/results")
+container = pathlib.Path("results")
 
 
 def process_file(
@@ -16,10 +17,17 @@ def process_file(
         return None
 
 
-def import_dataframe():
+def import_dataframe(number_of_parts : int, part : int):
+    n_dirs_in_container = sum([ 1 for f in container.iterdir() if f.is_dir() ])
+    part_size = round(n_dirs_in_container / number_of_parts)
+    start = part_size * part
+    end = part_size * (part + 1) if part + 1 != number_of_parts else n_dirs_in_container + 1
+
     dfs_evolution = []
-    for folder in container.iterdir():
-        if not folder.name.startswith("synthetic_") or not folder.is_dir():
+    for idx, folder in enumerate(container.iterdir()):
+        if idx % 100 == 0:
+            print(idx)
+        if not folder.name.startswith("synthetic_") or not folder.is_dir() or idx < start or idx >= end:
             continue
         _, seed, depth, difficulty = folder.name.split("_")
 
@@ -35,8 +43,19 @@ def import_dataframe():
 
 
 def main():
-    dfs_evolution = import_dataframe()
-    dfs_evolution.to_parquet(container / "synthetic_evolution.parquet")
+    number_of_parts = 2
+    file_locations = list()
+
+    for part in range(number_of_parts):
+        dfs_evolution = import_dataframe(number_of_parts, part)
+        file_location = f"synthetic_evolution{part}.parquet"
+        dfs_evolution.to_parquet(file_location)
+        file_locations.append(file_location)
+
+    print("Merging parquet files:", file_locations)
+    with pq.ParquetWriter("synthetic_evolution.parquet", schema=pq.ParquetFile(file_locations[0]).schema_arrow) as writer:
+        for file in file_locations:
+            writer.write_table(pq.read_table(file))
 
 
 if __name__ == "__main__":
