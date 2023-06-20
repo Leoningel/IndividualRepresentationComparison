@@ -133,7 +133,7 @@ def single_run(
             # -- Grammar Creation Variables ------------------
             "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,  #
             "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,  #
-            "Requested Average Productions per Non-Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,  #
+            "Requested Average Productions per Non Terminal": lambda gen, pop, time, gp, ind: average_productions_per_terminal,  #
             "Requested Non Terminals per Production": lambda gen, pop, time, gp, ind: non_terminals_per_production,  #
             # Target Individual Information
             "Target Individual": lambda gen, pop, time, gp, ind: str(target_individual),  #
