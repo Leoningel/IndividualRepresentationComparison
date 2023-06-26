@@ -33,6 +33,9 @@ from geneticengine.algorithms.callbacks.csv_callback import CSVCallback
 from geneticengine.algorithms.gp.gp import GP, GenericCrossoverStep, TournamentSelection
 from geneticengine.core.grammar import Grammar
 from geneticengine.core.problems import SingleObjectiveProblem
+from geneticengine.core.representations.tree.initializations import grow_method
+from geneticengine.core.representations.tree.treebased import random_individual
+from geneticengine.core.representations.tree.utils import get_nodes_depth_specific
 from geneticengine.algorithms.callbacks.callback import (
     Callback,
     TimeStoppingCriterium,
@@ -96,6 +99,12 @@ def single_run(
         (grammar_n_prods_occurrences, grammar_n_recursive_prods, grammar_alternatives, grammar_total_productions, grammar_average_productions_per_terminal, avg_non_terminals_per_production),
     ) = grammar.get_grammar_properties_summary()
 
+    def find_depth_specific_nodes(r, g, depth):
+        ind = random_individual(r,g,depth,method=grow_method)
+        return get_nodes_depth_specific(ind,g)
+    r = RandomSource(123)
+    branching_factors = grammar.get_branching_average_proxy(r, find_depth_specific_nodes, 100, 17)
+
     so_problem = SingleObjectiveProblem(
         minimize=params["MINIMIZE"],
         fitness_function=ff,
@@ -130,6 +139,7 @@ def single_run(
             "Grammar Total Number of Productions": lambda gen, pop, time, gp, ind: grammar_total_productions,  # The total number of productions in the grammar.
             "Grammar Average Number of Productions": lambda gen, pop, time, gp, ind: grammar_average_productions_per_terminal,  # The average number of productions for each non-terminal.
             "Grammar Average Non Terminals Per Production": lambda gen, pop, time, gp, ind: avg_non_terminals_per_production,  # The average number of non-terminals per production for each non-terminal.
+            "Grammar Branching Factors Proxy": lambda gen, pop, time, gp, ind: branching_factors,  # The average number of non-terminals in each depth of the grammar.
             # -- Grammar Creation Variables ------------------
             "Requested Non Terminals Count": lambda gen, pop, time, gp, ind: non_terminals_count,  #
             "Requested Recursive Non Terminals Count": lambda gen, pop, time, gp, ind: recursive_non_terminals_count,  #
